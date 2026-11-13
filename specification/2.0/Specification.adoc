@@ -49,51 +49,17 @@ toc::[]
 
 Copyright 2013-2026 The Khronos Group Inc.
 
-This specification is protected by copyright laws and contains material proprietary
-to Khronos. Except as described by these terms, it or any components
-may not be reproduced, republished, distributed, transmitted, displayed, broadcast,
-or otherwise exploited in any manner without the express prior written permission
-of Khronos.
+This Specification is protected by copyright laws and contains material proprietary to Khronos. Except as described by these terms, it or any components may not be reproduced, republished, distributed, transmitted, displayed, broadcast, or otherwise exploited in any manner without the express prior written permission of Khronos.
 
-This specification has been created under the Khronos Intellectual Property Rights
-Policy, which is Attachment A of the Khronos Group Membership Agreement available at
-https://www.khronos.org/files/member_agreement.pdf. Khronos grants a conditional
-copyright license to use and reproduce the unmodified specification for any purpose,
-without fee or royalty, EXCEPT no licenses to any patent, trademark or other
-intellectual property rights are granted under these terms. Parties desiring to
-implement the specification and make use of Khronos trademarks in relation to that
-implementation, and receive reciprocal patent license protection under the Khronos
-IP Policy must become Adopters under the process defined by Khronos for this specification;
-see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
+Khronos grants a conditional copyright license to use and reproduce the unmodified Specification for any purpose, without fee or royalty, EXCEPT no licenses to any patent, trademark, or other intellectual property rights are granted under these terms.
 
-Some parts of this Specification are non-normative through being explicitly identified as
-purely informative, and do not define requirements necessary for compliance and so are
-outside the Scope of this Specification.
+Khronos makes no, and expressly disclaims any, representations or warranties, express or implied, regarding this Specification, including, without limitation: merchantability, fitness for a particular purpose, non-infringement of any intellectual property, correctness, accuracy, completeness, timeliness, and reliability. Under no circumstances will Khronos, or any of its Promoters, Contributors or Members, or their respective partners, officers, directors, employees, agents or representatives be liable for any damages, whether direct, indirect, special or consequential damages for lost revenues, lost profits, or otherwise, arising from or in connection with these materials.
 
-Where this Specification includes normative references to external documents, only the
-specifically identified sections and functionality of those external documents are in
-Scope. Requirements defined by external documents not created by Khronos may contain
-contributions from non-members of Khronos not covered by the Khronos Intellectual
-Property Rights Policy.
+This Specification has been created under the Khronos Intellectual Property Rights Policy, which is Attachment A of the Khronos Group Membership Agreement available at https://www.khronos.org/files/member_agreement.pdf. Parties desiring to implement the Specification and make use of Khronos trademarks in relation to that implementation, and receive reciprocal patent license protection under the Khronos Intellectual Property Rights Policy must become Adopters and confirm the implementation as conformant under the process defined by Khronos for this Specification; see https://www.khronos.org/conformance/adopters/file-format-adopter-program.
 
-Khronos makes no, and expressly disclaims any, representations or warranties,
-express or implied, regarding this specification, including, without limitation:
-merchantability, fitness for a particular purpose, non-infringement of any
-intellectual property, correctness, accuracy, completeness, timeliness, and
-reliability. Under no circumstances will Khronos, or any of its Promoters,
-Contributors or Members, or their respective partners, officers, directors,
-employees, agents or representatives be liable for any damages, whether direct,
-indirect, special or consequential damages for lost revenues, lost profits, or
-otherwise, arising from or in connection with these materials.
+Where this Specification identifies specific sections of external references, only those specifically identified sections define normative functionality. The Khronos Intellectual Property Rights Policy excludes external references to materials and associated enabling technology not created by Khronos from the Scope of this Specification, and any licenses that may be required to implement such referenced materials and associated technologies must be obtained separately and may involve royalty payments.
 
-Khronos® and Vulkan® are registered trademarks, and ANARI™, WebGL™, glTF™, NNEF™, OpenVX™,
-SPIR™, SPIR&#8209;V™, SYCL™, OpenVG™ and 3D Commerce™ are trademarks of The Khronos Group Inc.
-OpenXR™ is a trademark owned by The Khronos Group Inc. and is registered as a trademark in
-China, the European Union, Japan and the United Kingdom. OpenCL™ is a trademark of Apple Inc.
-and OpenGL® is a registered trademark and the OpenGL ES™ and OpenGL SC™ logos are trademarks
-of Hewlett Packard Enterprise used under license by Khronos. ASTC is a trademark of
-ARM Holdings PLC. All other product names, trademarks, and/or company names are used solely
-for identification and belong to their respective owners.
+Khronos® is a registered trademark, and glTF™ and WebGL™ are trademarks of The Khronos Group Inc. All other product names, trademarks, and/or company names are used solely for identification and belong to their respective owners.
 
 [[introduction]]
 = Introduction
@@ -421,7 +387,15 @@ A valid glTF asset **MUST** specify its version.
 [[versioning]]
 == Versioning
 
-Any updates made to the glTF Specification in a minor version **MUST** be backward and forward compatible. Backward compatibility means that any client implementation that supports loading a glTF 2.x asset will also be able to load a glTF 2.0 asset. Forward compatibility means that a client implementation that only supports glTF 2.0 can load glTF 2.x assets while gracefully ignoring any new features it does not understand.
+This specification defines glTF version 2.0, that is, major version 2 and minor version 0.
+
+Any updates made to the glTF Specification in subsequent minor versions (while keeping the major version) **MUST** be backward and forward compatible.
+
+Backward compatibility means that a glTF asset authored for this version of the specification remains valid for all later minor versions of the specification. Client implementations that support any later minor version will also support all earlier minor versions.
+
+Forward compatibility means that a glTF asset authored for any later minor version will still be valid for this version of the specification. Client implementations that support this version of the specification will be able to load such assets while gracefully ignoring any new features they do not understand.
+
+Assets **MAY** opt out of default forward compatibility by specifying the minimum specification version, see the <<asset,Asset>> section below for more details.
 
 A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
 
@@ -766,6 +740,16 @@ All angles are in radians.
 
 The reference white point is D~65~.
 
+[NOTE]
+.Implementation Note
+====
+Photometry units used in glTF assets are defined for a light source approximating the reference white point, such as the standard D65 illuminant.
+
+Implementations working with radiometry units should use the relative spectral power distribution corresponding to the light source and the spectral luminous efficiency values for photopic vision to derive per-wavelength radiant flux values.
+
+If a single luminous efficacy value of the light source's radiation is needed, it is assumed to be 176.67{nbsp}lm·W^-1^; this value is less than the maximum luminous efficacy of 683{nbsp}lm·W^-1^ because the latter is only achievable at 555 nm. Note that this is the ratio of the light source's luminous flux (lm) to its radiant flux (W), it does not account for the power consumed by the light source (also measured in W).
+====
+
 Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> chromaticity coordinates.
 
 [NOTE]
@@ -782,7 +766,7 @@ Chromaticity coordinates define the interpretation of each primary color channel
 
 glTF 2.0 assets **MAY** contain zero or more _scenes_, the set of visual objects to render.
 
-Scenes are defined in the `scenes` array. A scene is defined by a set of root nodes, i.e., nodes that are not descendants of any node. The indices of the scene's root nodes are defined in the `nodes` array property of the scene. The same root nodes **MAY** appear in multiple scenes.
+Scenes are defined in the `scenes` array. A scene is defined by a set of root nodes, i.e., nodes that are not descendants of any node. The indices of the scene's root nodes are defined in the `nodes` array property of the scene. All elements of the `nodes` array **MUST** be unique. The same root nodes **MAY** appear in multiple scenes.
 
 The root JSON object's `scene` property (note singular) identifies which of the scenes **SHOULD** be displayed at load time. When the `scene` property is undefined, client implementations **MAY** delay rendering until a particular scene is requested.
 
@@ -825,7 +809,7 @@ Nodes are organized in a parent-child hierarchy known informally as the _node hi
 
 The node hierarchy **MUST** be a set of disjoint strict trees. That is node hierarchy **MUST NOT** contain cycles and each node **MUST** have zero or one parent node.
 
-A node lists its children node indices in the `children` array property. Each of those nodes could in turn have its own children, creating a hierarchy of nodes.
+A node lists its children node indices in the `children` array property. Each of those nodes could in turn have its own children, creating a hierarchy of nodes. All elements of the `children` array **MUST** be unique.
 
 [NOTE]
 .Example
@@ -1331,7 +1315,7 @@ Then the byte offset of the _i_-th accessor element within the buffer view is de
 [NOTE]
 .Implementation Note
 ====
-When _stride_ is greater than _size_, accessor elements are not tightly-packed and thus interleaved bytes would need to be skipped during iteration over accessor elements. Graphics APIs usually support that directly by accepting byte stride values associated with vertex attributes.
+When _stride_ is greater than _size_, accessor elements are not tightly-packed, and thus interleaved bytes would need to be skipped during iteration over accessor elements. Graphics APIs usually support that directly by accepting byte stride values associated with vertex attributes.
 ====
 
 The referenced buffer view **MUST** be large enough to fit all accessed elements, i.e., the buffer view's byte length **MUST** be greater than or equal to the value of the following expression.
@@ -1639,7 +1623,7 @@ The following example defines a mesh containing one primitive with explicit vert
 
 The `attributes` property is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding data.
 
-The `attributes` JSON object differs from the most of glTF JSON objects. In particular, it is treated as a flat key-value storage and thus it **MUST NOT** have any nested objects or values that are not accessor references.
+The `attributes` JSON object differs from the most of glTF JSON objects. In particular, it is treated as a flat key-value storage, and thus it **MUST NOT** have any nested objects or values that are not accessor references.
 
 Properties of the `attributes` object **SHOULD** belong to one of the following categories as follows:
 
@@ -1812,7 +1796,7 @@ Mesh geometry **SHOULD NOT** contain degenerate lines or triangles, i.e., lines 
 
 When positions are not specified, client implementations **SHOULD** skip primitive's rendering unless its positions are provided by other means (e.g., by an extension). This applies to both indexed and non-indexed geometry.
 
-When normals are not specified, the mesh primitive has implicit flat normals. The provided tangents are ignored in this case and thus they **SHOULD NOT** be present.
+When normals are not specified, the mesh primitive has implicit flat normals. The provided tangents are ignored in this case, and thus they **SHOULD NOT** be present.
 
 [NOTE]
 .Implementation Note
@@ -1843,7 +1827,7 @@ A mesh primitive **MAY** define _morph targets_.
 
 A morph target defines an alternative state of the primitive's vertex attribute values stored as differences (deltas) between the target vertex attribute values and the original vertex attributes values.
 
-Morph targets are specified in the primitive's `targets` array. The number of elements of the `targets` array defines the number of morph targets for the mesh primitive. Each element of that array is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values. Similarly to the primitive's `attributes` object, each element of the `targets` array is treated as a flat key-value storage and thus it **MUST NOT** have any nested objects or values that are not accessor references.
+Morph targets are specified in the primitive's `targets` array. The number of elements of the `targets` array defines the number of morph targets for the mesh primitive. Each element of that array is a JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values. Similarly to the primitive's `attributes` object, each element of the `targets` array is treated as a flat key-value storage, and thus it **MUST NOT** have any nested objects or values that are not accessor references.
 
 Vertex attribute semantic names not present in the primitive's `attributes` object **MUST NOT** be present in its morph targets. Extension-defined and application-specific attribute semantics use the same naming conventions as for the primitive's `attributes` object.
 
@@ -1870,7 +1854,7 @@ The `weights` property of the mesh, if defined, provides an array of default mor
 [NOTE]
 .Example
 ====
-The following example shows a mesh with three primitives and two morph targets. The first primitive has no morph targets and thus its vertex attributes have only one state. The second primitive defines two morph targets with difference values for both vertex attribute semantics. The third primitive defines two morph targets: the first morph target provides difference values for only one vertex attribute, the second morph target is empty. The mesh also defines default morph target weights.
+The following example shows a mesh with three primitives and two morph targets. The first primitive has no morph targets, and thus its vertex attributes have only one state. The second primitive defines two morph targets with difference values for both vertex attribute semantics. The third primitive defines two morph targets: the first morph target provides difference values for only one vertex attribute, the second morph target is empty. The mesh also defines default morph target weights.
 
 [source,json]
 ----
@@ -1982,7 +1966,7 @@ If the accessor providing stem:[A_i] values has fewer components than are otherw
 [NOTE]
 .Implementation Note
 ====
-For example, original `COLOR_n` values stored with the `"VEC3"` type imply that their alpha values are stem:[1.0] and thus `COLOR_n` delta values provided by `"VEC4"` accessors are applied as if the original values also used the `"VEC4"` type.
+For example, original `COLOR_n` values stored with the `"VEC3"` type imply that their alpha values are stem:[1.0], and thus `COLOR_n` delta values provided by `"VEC4"` accessors are applied as if the original values also used the `"VEC4"` type.
 ====
 
 If the accessor providing latexmath:[\Delta{A}_{m,i}] values has fewer components than are otherwise supported for the vertex attribute semantic, the omitted components are considered zeros for the purpose of this computation.
@@ -2003,7 +1987,7 @@ If the mesh primitive does not specify normals, i.e., if they are implicitly fla
 
 If the mesh primitive does specify normals but a morph target does not provide deltas for them, the normal vectors remain intact for that morph target.
 
-If the tangent vectors were calculated for the mesh primitive (because they were not provided or because the provided tangent vectors were ignored), the tangent vector deltas are also calculated for each morph target using the same algorithms and vertex positions, normals, and texture coordinates with the corresponding deltas applied. The provided tangent deltas are ignored in this case and thus they **SHOULD NOT** be present.
+If the tangent vectors were calculated for the mesh primitive (because they were not provided or because the provided tangent vectors were ignored), the tangent vector deltas are also calculated for each morph target using the same algorithms and vertex positions, normals, and texture coordinates with the corresponding deltas applied. The provided tangent deltas are ignored in this case, and thus they **SHOULD NOT** be present.
 
 If the mesh primitive does specify normals and tangents but a morph target does not provide tangent deltas, the tangent vectors remain intact for that morph target.
 
@@ -2099,7 +2083,7 @@ glTF 2.0 mesh primitives support Linear Blend Skinning via skin objects, joint h
 
 Skins are stored in the `skins` array of the asset. Each skin contains a **REQUIRED** `joints` property that lists the indices of nodes used as joints and an **OPTIONAL** `inverseBindMatrices` property that points to an accessor with inverse bind matrix data.
 
-The `joints` array defines mapping between skin's joint indices and glTF nodes.
+The `joints` array defines mapping between skin's joint indices and glTF nodes. All elements of the `joints` array **MUST** be unique.
 
 If the `inverseBindMatrices` property is defined, the elements of the referenced accessor provide inverse bind matrices in the order of joints. If the `inverseBindMatrices` property is not defined, all inverse bind matrices of the skin are implicitly identity.
 
@@ -2954,11 +2938,13 @@ This specification does not define size or style of non-triangular primitives (s
 [[cameras-overview]]
 === Overview
 
-Cameras are stored in the asset's `cameras` array. Each camera defines a `type` property that designates the type of projection (perspective or orthographic), and either a `perspective` or `orthographic` property that defines the details. A camera is instantiated within a node using the `camera` property of the node.
+Cameras are stored in the asset's `cameras` array. A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
 
-A camera object defines the projection matrix that transforms scene coordinates from the view space to the clip space.
+A camera object **MUST** define a `type` property that designates the type of projection.
 
-A node containing the `camera` property instantiates a camera with that projection matrix and defines the associated view matrix that transforms scene coordinates from the global space to the view space.
+If the value of the `type` property is `"perspective"`, the camera uses perspective projection and the `perspective` property **MUST** be defined. If the value of the `type` property is `"orthographic"`, the camera uses orthographic projection and the `orthographic` property **MUST** be defined. A property not matching the camera type **SHOULD NOT** be defined.
+
+A node containing the `camera` property instantiates a camera with its projection matrix and defines the associated view matrix that transforms scene coordinates from the global space to the view space.
 
 [[view-matrix]]
 === View Matrix
@@ -3193,10 +3179,12 @@ where
 - stem:[n] is the array property's length if the animated property is an array, or one otherwise;
 - stem:[j] is the array property's index if the animated property is an array, or zero otherwise.
 
+The first keyframe's incoming tangent and the last keyframe's outgoing tangent are not used, and thus they **SHOULD** be zeros.
+
 [NOTE]
 .Example
 ====
-If there are three keyframes and the animated property is not an array, the output accessor would have nine elements:
+If there are three keyframes and the animated property is not an array, the output accessor would have nine elements. The latexmath:[\mathit{in}_{0,0}] and latexmath:[\mathit{out}_{2,0}] elements are unused.
 
 [latexmath]
 +++++
@@ -3208,7 +3196,7 @@ If there are three keyframes and the animated property is not an array, the outp
 \end{aligned}
 +++++
 
-If there are three keyframes and the animated property is an array of two elements, the output accessor would have 18 elements:
+If there are three keyframes and the animated property is an array of two elements, the output accessor would have 18 elements. The latexmath:[\mathit{in}_{0,0}], latexmath:[\mathit{in}_{0,1}], latexmath:[\mathit{out}_{2,0}], and latexmath:[\mathit{out}_{2,1}] elements are unused.
 
 [latexmath]
 +++++
@@ -3378,62 +3366,84 @@ v_t = (1 - t) \cdot v_k + t \cdot v_{k+1}
 
 This mode is used when the animation sampler interpolation mode is `"LINEAR"` and the animated property is `"rotation"`, i.e., values of the animated property are unit quaternions.
 
-Let
-[none]
-* latexmath:[a = \arccos(|v_k \cdot v_{k+1}|)] be the arccosine of the absolute value of the dot product of two consecutive quaternions;
-* latexmath:[d = v_k \cdot v_{k+1}] be the dot product of two consecutive quaternions;
-* latexmath:[s = \begin{cases} +1 & \text{if } d \ge 0 \\ -1 & \text{if } d \lt 0 \end{cases}].
+The interpolated animated property value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
-The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
-
+1. Let latexmath:[d = v_k \cdot v_{k+1}], i.e., the dot product of two quaternions from two adjacent keyframes.
+2. If stem:[d < 0], negate stem:[d] and all components of stem:[v_{k+1}].
++
+[NOTE]
+.Rationale
+====
+This step ensures that the interpolation follows the short path along the great circle defined by the two quaternions.
+====
+3. Clamp stem:[d] to the stem:[\[0, 1\]] range.
++
+[NOTE]
+.Rationale
+====
+Although the specification requires all rotation quaternions to be unit, their computed dot products could be slightly outside of the correct range due to floating-point precision limits.
+====
+4. If the value of stem:[d] is close to positive one within an implementation-defined threshold stem:[\epsilon], i.e., if stem:[1 - d <= \epsilon], the spherical linear interpolation is replaced with the regular linear interpolation defined in the previous section. The interpolated quaternion is then renormalized. If the components of stem:[v_{k+1}] were negated during the step 2, the regular linear interpolation uses the negated components.
++
+[NOTE]
+.Implementation Note
+====
+Although the theoretical stem:[\epsilon] value that aligns spherical and regular linear interpolations for double-precision arithmetic is approximately stem:[10^-16], many implementations use stem:[10^-6] for better numerical stability and compatibility with single-precision workflows.
+====
+5. Let latexmath:[a = \arccos(d)].
+6. Compute the interpolated rotation value stem:[v_t] at the timestamp stem:[t_c] as follows.
++
 [latexmath]
 ++++
-v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + s \cdot \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
+v_t = \frac{\sin(a \cdot (1 - t))}{\sin(a)} \cdot v_k + \frac{\sin(a \cdot t)}{\sin(a)} \cdot v_{k+1}
 ++++
 
-[NOTE]
-.Implementation Note
-====
-Using the dot product's absolute value for computing stem:[a] and negating stem:[v_{k+1}] when stem:[d] is negative ensure that the spherical interpolation follows the short path along the great circle defined by the two quaternions.
-====
-
 Implementations **MAY** approximate these equations to reach application-specific accuracy and/or performance targets.
-
-[NOTE]
-.Implementation Note
-====
-When stem:[a] is close to zero, spherical linear interpolation turns into regular linear interpolation.
-====
 
 [[interpolation-cubic]]
 ==== Cubic Spline Interpolation
 
 This mode is used when the animation sampler interpolation mode is `"CUBICSPLINE"`.
 
-For each timestamp provided by the animation sampler input accessor, there are three associated keyframe values: incoming tangent, animated property value, and outgoing tangent.
+Each interpolation segment is a third-degree polynomial specified in Hermite form, i.e., by the property values and their first derivatives at the keyframes. Keyframe's incoming and outgoing derivatives do not have to match.
+
+For each timestamp provided by the animation sampler input accessor, there are three associated keyframe values: incoming tangent (the derivative for the interpolation segment before the keyframe), animated property value, and outgoing tangent (the derivative for the interpolation segment after the keyframe).
 
 Let
 [none]
 * stem:[a_k], stem:[v_k], and stem:[b_k] be the incoming tangent, property value, and outgoing tangent of the stem:[k]-th frame, respectively.
 
-The interpolated animated property value stem:[v_t] at the timestamp stem:[t_c] is computed as follows.
+The interpolated animated property value stem:[v_t] at the current (requested) timestamp stem:[t_c] is computed as follows.
 
 [latexmath]
 ++++
-v_t = (2t^3 - 3t^2 + 1) \cdot v_k + t_d \cdot (t^3 - 2t^2 + t) \cdot b_k + (-2t^3 + 3t^2) \cdot v_{k+1} + t_d \cdot (t^3 - t^2) \cdot a_{k+1}
+v_t = (2t^3 - 3t^2 + 1) \cdot v_k + (t^3 - 2t^2 + t) \cdot b_k \cdot t_d + (-2t^3 + 3t^2) \cdot v_{k+1} + (t^3 - t^2) \cdot a_{k+1} \cdot t_d
 ++++
-
-If the animated property is a unit quaternion, the computed value is normalized after the interpolation.
-
-When writing out rotation keyframes, exporters **SHOULD** take care to not write out values that can result in an invalid quaternion with all zero values being produced by the interpolation.
 
 [NOTE]
 .Implementation Note
 ====
-This can be achieved by ensuring that latexmath:[v_k \ne -v_{k+1}] for all keyframes.
+This polynomial can also be written in standard form. Note that polynomial coefficients need to be computed only once per each interpolation segment.
+
+[latexmath]
+++++
+\begin{align*}
+A &= 2 v_k + b_k \cdot t_d - 2 v_{k+1} + a_{k+1} \cdot t_d \\
+B &= -3 v_k - 2 b_k \cdot t_d + 3 v_{k+1} - a_{k+1} \cdot t_d \\
+C &= b_k \cdot t_d \\
+D &= v_k \\
+v_t &=  A \cdot t^3 + B \cdot t^2 + C \cdot t + D
+\end{align*}
+++++
 ====
 
-The first incoming tangent stem:[a_1] and last outgoing tangent stem:[b_n] **SHOULD** be zeros as they are not used in cubic spline calculations.
+If the animated property is `"rotation"`, the quaternion is renormalized after interpolating its components. The polynomials **SHOULD NOT** have roots for stem:[t \in (0,1)] common for all four quaternion components within any interpolation segment.
+
+[NOTE]
+.Implementation Note
+====
+If stem:[r \in (0,1)] is a common root for all four polynomials, the quaternion components would be zero when stem:[t = r]. Combined with the required renormalization, this would cause numerical instability in interpolated values for stem:[t \approx r].
+====
 
 [[animations-examples]]
 === Examples
@@ -3611,7 +3621,7 @@ glTF defines an extension mechanism that allows the base format to be extended w
 ----
 ====
 
-All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array.
+All extensions used in a glTF asset **MUST** be listed in the top-level `extensionsUsed` array. All elements of the `extensionsUsed` array **MUST** be unique.
 
 [NOTE]
 .Example
@@ -3627,7 +3637,7 @@ All extensions used in a glTF asset **MUST** be listed in the top-level `extensi
 ----
 ====
 
-All glTF extensions required to load and/or render an asset **MUST** be listed in the top-level `extensionsRequired` array.
+All glTF extensions required to load and/or render an asset **MUST** be listed in the top-level `extensionsRequired` array. All elements of the `extensionsRequired` array **MUST** be unique.
 
 [NOTE]
 .Example
@@ -3690,8 +3700,8 @@ The 8-byte header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32_t magic
-uint32_t version
+uint32 magic
+uint32 version
 ----
 
 * `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` that can be used to identify data as Binary glTF.
@@ -3708,7 +3718,7 @@ In GLBv2, the size header consists of one 4-byte little-endian field.
 
 [source,c]
 ----
-uint32_t length
+uint32 length
 ----
 
 * `length` is the total byte length of the Binary glTF, including the GLB header, the size header, and all chunks.
@@ -3728,9 +3738,9 @@ Each GLBv2 chunk header consists of two 4-byte little-endian fields.
 
 [source,c]
 ----
-uint32_t chunkLength
-uint32_t chunkType
-uint8_t[] chunkData
+uint32 chunkLength
+uint32 chunkType
+uint8[] chunkData
 ----
 
 * `chunkLength` is the byte length of `chunkData`.
