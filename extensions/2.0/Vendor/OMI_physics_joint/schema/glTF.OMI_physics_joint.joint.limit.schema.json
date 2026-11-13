@@ -1,0 +1,63 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_joint.limit.schema.json",
+    "title": "OMI_physics_joint Physics Joint Limit",
+    "type": "object",
+    "description": "Parameters describing how a joint constrains the relative motion of a pair of nodes.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "linearAxes": {
+            "description": "The indices of the linear axes which are limited, constraining the linear motion in 1, 2 or 3 dimensions. 1D keeps an object some distance from an infinite plane. 2D keeps an object some distance from an infinite line. 3D keeps an object some distance from a point. Can only contain 0 (X), 1 (Y), or 2 (Z), so [0, 1, 2] constrains all three axes.",
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+            },
+            "minItems": 0,
+            "maxItems": 3,
+            "uniqueItems": true
+        },
+        "angularAxes": {
+            "description": "The indices of the angular axes which are limited, constraining the angular motion in 1, 2 or 3 dimensions. 1D limits rotation about one axis (e.g. a universal joint). 2D limits rotation about two axes (e.g. a cone). 3D limits rotation about all three axes. Can only contain 0 (X), 1 (Y), or 2 (Z), so [0, 1, 2] constrains all three axes.",
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+            },
+            "minItems": 0,
+            "maxItems": 3,
+            "uniqueItems": true
+        },
+        "min": {
+            "type": "number",
+            "description": "The minimum of the allowed range of relative distance in meters, or angle in radians. If not specified, the minimum is unbounded (negative infinity). At least one of min or max should be present, or the limit is useless."
+        },
+        "max": {
+            "type": "number",
+            "description": "The maximum of the allowed range of relative distance in meters, or angle in radians. If not specified, the maximum is unbounded (positive infinity). At least one of min or max should be present, or the limit is useless."
+        },
+        "stiffness": {
+            "type": "number",
+            "description": "The stiffness strength used to calculate a restorative force when the joint is extended beyond the limit. If not present, the limit should be infinitely stiff.",
+            "minimum": 0.0
+        },
+        "damping": {
+            "type": "number",
+            "description": "Damping applied to the velocity when the joint is extended beyond the limit.",
+            "minimum": 0.0,
+            "default": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "oneOf": [
+        {
+            "required": ["linearAxes"]
+        },
+        {
+            "required": ["angularAxes"]
+        }
+    ]
+}
