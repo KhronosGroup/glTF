@@ -1,0 +1,310 @@
+{
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5546,
+            "max": [0.158739, 0.218841, 0.16122],
+            "min": [-0.158738, -0.093846, -0.16122],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5546,
+            "max": [1, 0.999997, 1, 1],
+            "min": [-0.999999, -0.99991, -1, 1],
+            "normalized": false,
+            "type": "VEC4"
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5546,
+            "max": [1, 1, 0.999977],
+            "min": [-1, -1, -1],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 5546,
+            "max": [0.999893, 0.977859],
+            "min": [0.000656, 0.00322],
+            "normalized": false,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 4,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 18108,
+            "max": [3586],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 5,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 1512,
+            "max": [0.158767, 0.147275, 0.161401],
+            "min": [-0.158767, -0.093846, -0.160383],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 6,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 1512,
+            "max": [1511],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        },
+        {
+            "bufferView": 7,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 486,
+            "max": [0.147321, 0.194401, 0.128095],
+            "min": [-0.147379, 0.075066, 0.019262],
+            "normalized": false,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 8,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 486,
+            "max": [485],
+            "min": [0],
+            "normalized": false,
+            "type": "SCALAR"
+        }
+    ],
+    "asset": {
+        "copyright": "2023 The Khronos Group",
+        "extensions": { "KHR_xmp_json_ld": { "packet": 0 } },
+        "generator": "Godot Engine v4.3.dev.custom_build",
+        "version": "2.0"
+    },
+    "bufferViews": [
+        { "buffer": 0, "byteLength": 66552, "byteOffset": 0 },
+        { "buffer": 0, "byteLength": 88736, "byteOffset": 66552 },
+        { "buffer": 0, "byteLength": 66552, "byteOffset": 155288 },
+        { "buffer": 0, "byteLength": 44368, "byteOffset": 221840 },
+        { "buffer": 0, "byteLength": 72432, "byteOffset": 266208 },
+        { "buffer": 0, "byteLength": 18144, "byteOffset": 338640 },
+        { "buffer": 0, "byteLength": 6048, "byteOffset": 356784 },
+        { "buffer": 0, "byteLength": 5832, "byteOffset": 362832 },
+        { "buffer": 0, "byteLength": 1944, "byteOffset": 368664 }
+    ],
+    "buffers": [{ "byteLength": 370608, "uri": "boom_box0.bin" }],
+    "extensions": {
+        "KHR_audio_emitter": {
+            "audio": [
+                {
+                    "extensions": { "KHR_xmp_json_ld": { "packet": 0 } },
+                    "mimeType": "audio/mpeg",
+                    "uri": "kevin_macleod_bassa_island_loop.mp3"
+                }
+            ],
+            "emitters": [
+                {
+                    "gain": 0.3,
+                    "name": "BoomBoxAudioEmitter",
+                    "positional": { "refDistance": 1 },
+                    "sources": [0],
+                    "type": "positional"
+                }
+            ],
+            "sources": [
+                {
+                    "audio": 0,
+                    "autoPlay": true,
+                    "loop": true,
+                    "name": "kevin_macleod_bassa_island_loop"
+                }
+            ]
+        },
+        "KHR_xmp_json_ld": {
+            "packets": [
+                {
+                    "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
+                    "@id": "",
+                    "dc:creator": { "@list": ["The Khronos Group"] },
+                    "dc:description": "Showcase of the KHR_audio_emitter and OMI_physics_body extensions",
+                    "dc:format": "model/gltf+json",
+                    "dc:publisher": { "@set": ["The Khronos Group"] },
+                    "dc:rights": "CC0 1.0 Universal",
+                    "dc:title": "Boom Box with audio and physics"
+                },
+                {
+                    "@context": { "dc": "http://purl.org/dc/elements/1.1/" },
+                    "@id": "",
+                    "dc:creator": { "@list": ["Kevin MacLeod"] },
+                    "dc:date": "2011",
+                    "dc:description": "Bassa Island Game Loop by Kevin MacLeod",
+                    "dc:format": "audio/mpeg",
+                    "dc:identifier": "ISRC: USUAN1100840",
+                    "dc:publisher": { "@set": ["Incompetech"] },
+                    "dc:rights": "CC BY 3.0: Attribution",
+                    "dc:source": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Bassa%20Island%20Game%20Loop.mp3",
+                    "dc:title": "Bassa Island Game Loop"
+                }
+            ]
+        },
+        "OMI_physics_shape": {
+            "shapes": [
+                {
+                    "convex": { "mesh": 1 },
+                    "type": "convex"
+                },
+                {
+                    "convex": { "mesh": 2 },
+                    "type": "convex"
+                },
+                {
+                    "capsule": { "height": 0.04, "radius": 0.007 },
+                    "type": "capsule"
+                },
+                {
+                    "capsule": { "height": 0.199, "radius": 0.005 },
+                    "type": "capsule"
+                }
+            ]
+        }
+    },
+    "extensionsUsed": [
+        "GODOT_single_root",
+        "KHR_audio_emitter",
+        "KHR_xmp_json_ld",
+        "OMI_physics_body",
+        "OMI_physics_shape"
+    ],
+    "images": [
+        {
+            "mimeType": "image/png",
+            "name": "boom_box_base_color",
+            "uri": "textures/boom_box_base_color.png"
+        },
+        {
+            "mimeType": "image/png",
+            "name": "boom_box_orm",
+            "uri": "textures/boom_box_orm.png"
+        },
+        {
+            "mimeType": "image/png",
+            "name": "boom_box_normal",
+            "uri": "textures/boom_box_normal.png"
+        },
+        {
+            "mimeType": "image/png",
+            "name": "boom_box_emission",
+            "uri": "textures/boom_box_emission.png"
+        }
+    ],
+    "materials": [
+        {
+            "emissiveFactor": [0, 0, 0],
+            "emissiveTexture": { "index": 3 },
+            "extensions": {},
+            "name": "BoomBox_Mat",
+            "normalTexture": { "index": 2, "scale": 1 },
+            "occlusionTexture": { "index": 1 },
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [1, 1, 1, 1],
+                "baseColorTexture": { "index": 0 },
+                "metallicFactor": 1,
+                "metallicRoughnessTexture": { "index": 1 },
+                "roughnessFactor": 1
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [
+                {
+                    "attributes": { "NORMAL": 2, "POSITION": 0, "TANGENT": 1, "TEXCOORD_0": 3 },
+                    "indices": 4,
+                    "material": 0,
+                    "mode": 4
+                }
+            ]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [{ "attributes": { "POSITION": 5 }, "indices": 6, "mode": 4 }]
+        },
+        {
+            "extras": { "targetNames": [] },
+            "primitives": [{ "attributes": { "POSITION": 7 }, "indices": 8, "mode": 4 }]
+        }
+    ],
+    "nodes": [
+        {
+            "children": [1, 2, 3, 4, 5, 6],
+            "extensions": { "OMI_physics_body": { "motion": { "mass": 5, "type": "dynamic" } } },
+            "name": "BoomBox"
+        },
+        {
+            "mesh": 0,
+            "name": "BoomBoxMesh",
+            "rotation": [0, 1, 0, 0]
+        },
+        {
+            "extensions": {
+                "KHR_audio_emitter": { "emitter": 0 }
+            },
+            "name": "BoomBoxAudioEmitter"
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": { "collider": { "shape": 0 } }
+            },
+            "name": "MainColliderShape",
+            "rotation": [0, 1, 0, 0]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": { "collider": { "shape": 1 } }
+            },
+            "name": "HandleColliderShape",
+            "rotation": [0, 1, 0, 0]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": { "collider": { "shape": 2 } }
+            },
+            "name": "AntennaBaseColliderShape",
+            "translation": [0.145, 0.085, 0.004]
+        },
+        {
+            "extensions": {
+                "OMI_physics_body": { "collider": { "shape": 3 } }
+            },
+            "name": "AntennaShaftColliderShape",
+            "rotation": [-0.4547680914402, 0, 0, 0.890609860420227],
+            "translation": [0.1445, 0.159, -0.0775]
+        }
+    ],
+    "samplers": [{ "magFilter": 9729, "minFilter": 9987, "wrapS": 10497, "wrapT": 10497 }],
+    "scene": 0,
+    "scenes": [{ "nodes": [0] }],
+    "textures": [
+        { "sampler": 0, "source": 0 },
+        { "sampler": 0, "source": 1 },
+        { "sampler": 0, "source": 2 },
+        { "sampler": 0, "source": 3 }
+    ]
+}
