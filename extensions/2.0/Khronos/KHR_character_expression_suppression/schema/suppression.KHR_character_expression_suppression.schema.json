@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_expression_suppression Suppression Properties",
+    "type": "object",
+    "description": "Defines one attenuation contribution from the containing source expression to a target expression.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "target": {
+            "allOf": [ { "$ref": "glTFid.schema.json" } ],
+            "description": "Index of the native expression driver attenuated by this suppression.",
+            "gltf_detailedDescription": "This value MUST be a valid index into the `expressions` array of the top-level `KHR_character_expression` extension object."
+        },
+        "name": {
+            "type": "string",
+            "description": "Optional name of this suppression.",
+            "gltf_detailedDescription": "This name is independent of the target expression entry's name; no correspondence is implied or required. Resolution MUST use `target`, not this value."
+        },
+        "type": {
+            "description": "Suppression type. 'blend' contributes amount times the source driver; 'block' contributes amount when the source driver exceeds threshold, otherwise 0. All attenuation contributions are summed and clamped per target. A custom value is shaped like a glTF vendor extension name and MUST be ignored at runtime unless a supported companion extension object on this suppression, keyed by exactly this value, defines its attenuation as one finite value in [0, 1].",
+            "anyOf": [
+                {
+                    "const": "blend"
+                },
+                {
+                    "const": "block"
+                },
+                {
+                    "type": "string",
+                    "pattern": "^[A-Z0-9]+_[a-z0-9]+(?:_[a-z0-9]+)*$"
+                }
+            ],
+            "default": "blend"
+        },
+        "amount": {
+            "type": "number",
+            "description": "Attenuation amount used by the 'blend' and 'block' contributions.",
+            "gltf_detailedDescription": "On a custom type it has no standard meaning, and only the attenuation function of a supported same-object companion extension MAY read it. Such a function reads an omitted value as `1`, so omitting it gives the same attenuation as authoring `1`.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "threshold": {
+            "type": "number",
+            "description": "Strict source-driver threshold for a 'block' suppression. The suppression contributes amount only when the source value is greater than this value.",
+            "gltf_detailedDescription": "On a custom type it has no standard meaning, and only the attenuation function of a supported same-object companion extension MAY read it. Such a function reads an omitted value as `0`, so omitting it gives the same attenuation as authoring `0`. Exporters MUST NOT write it when `type` is `blend` or omitted; importers MUST ignore it there.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 0.0
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": ["target"]
+}

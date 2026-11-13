@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "KHR_character_skeleton_mapping glTF Document Extension",
+    "type": "object",
+    "description": "Associates roles from externally defined skeletal vocabularies with glTF nodes.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "skeletalRigMappings": {
+            "type": "object",
+            "description": "Nonempty dictionary of skeletal vocabulary mappings. Each key is a nonempty mapping-set identifier that names a skeletal vocabulary; each value associates that vocabulary's role identifiers with glTF nodes.",
+            "minProperties": 1,
+            "propertyNames": {
+                "type": "string",
+                "minLength": 1
+            },
+            "additionalProperties": {
+                "type": "object",
+                "description": "Nonempty role-association dictionary. Each key is a nonempty role identifier; exporters write only identifiers that the mapping set's vocabulary defines, but other keys remain valid. Each value is a role association.",
+                "minProperties": 1,
+                "propertyNames": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "additionalProperties": {
+                    "$ref": "jointAssociation.KHR_character_skeleton_mapping.schema.json"
+                }
+            }
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "skeletalRigMappings"
+    ]
+}
