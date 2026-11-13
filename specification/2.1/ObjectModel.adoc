@@ -240,7 +240,7 @@ Additionally, the following pointer templates represent read-only runtime proper
 | `/cameras.length`                   | `int`      | Number of cameras
 | `/cameras/{}`                       | `ref`      | Reference to the camera
 | `/externalAssets.length`            | `int`      | Number of external assets
-| `/externalAssets/{}`                 | `ref`      | Reference to the external asset
+| `/externalAssets/{}`                | `ref`      | Reference to the external asset
 | `/externalAssets/{}/file`           | `ref`      | Reference to the file
 | `/files.length`                     | `int`      | Number of files
 | `/files/{}`                         | `ref`      | Reference to the file
