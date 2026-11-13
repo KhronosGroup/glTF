@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MSFT_audio_emitter scene extension",
+    "type": "object",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "emitters": {
+            "type": "array",
+            "items": {
+                "$ref": "glTFid.schema.json"
+            }, 
+            "minItems": 1,
+            "uniqueItems": true,
+            "description": "Array of ids to emitter referenced by this scene."
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties": false,
+    "required": [ "emitters" ]
+}

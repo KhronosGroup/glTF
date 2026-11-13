@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "MSFT_audio_emitter animation extension",
+    "type": "object",
+    "description": "Array events to play or stop an emitter during an animation.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "events": {
+            "type": "array",
+            "items": {
+                "$ref": "event.schema.json"
+            }, 
+            "minItems": 1
+        },
+        "extensions" : {},
+        "extras" : {}
+    },
+    "additionalProperties": false,
+    "required": [ "events" ]
+}
