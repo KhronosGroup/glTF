@@ -3,44 +3,49 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/bufferView.schema.json",
     "title": "Buffer View",
     "type": "object",
-    "description": "A view into a buffer generally representing a subset of the buffer.",
+    "description": "A span of bytes in a buffer.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "buffer": {
+            "title": "Buffer Index",
             "$ref": "glTFid.schema.json",
             "description": "The index of the buffer."
         },
         "byteLength": {
+            "title": "Byte Length",
             "type": "integer",
-            "description": "The length of the bufferView in bytes.",
+            "description": "The length of the buffer view in bytes.",
             "minimum": 1
         },
         "byteOffset": {
+            "title": "Byte Offset",
             "type": "integer",
             "description": "The offset into the buffer in bytes.",
             "minimum": 0,
             "default": 0
         },
         "byteStride": {
+            "title": "Byte Stride",
             "type": "integer",
-            "description": "The stride, in bytes.",
+            "description": "The stride, in bytes, between consecutive vertex attribute values.",
             "minimum": 4,
             "maximum": 252,
-            "multipleOf": 4,
-            "gltf_detailedDescription": "The stride, in bytes, between vertex attributes.  When this is not defined, data is tightly packed. When two or more accessors use the same buffer view, this field **MUST** be defined."
+            "multipleOf": 4
         },
         "target": {
-            "description": "The hint representing the intended GPU buffer type to use with this buffer view.",
+            "title": "Usage Target",
+            "type": "integer",
+            "description": "The optional hint specifying that the buffer view is directly used for vertex attributes or indices.",
             "anyOf": [
                 {
+                    "title": "Vertex Array",
                     "const": 34962,
-                    "description": "ARRAY_BUFFER",
-                    "type": "integer"
+                    "description": "The buffer view is used for vertex attributes."
                 },
                 {
+                    "title": "Element Array",
                     "const": 34963,
-                    "description": "ELEMENT_ARRAY_BUFFER",
-                    "type": "integer"
+                    "description": "The buffer view is used for vertex indices."
                 },
                 {
                     "type": "integer"

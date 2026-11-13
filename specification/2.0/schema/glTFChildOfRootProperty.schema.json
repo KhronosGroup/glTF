@@ -3,12 +3,13 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/glTFChildOfRootProperty.schema.json",
     "title": "glTF Child of Root Property",
     "type": "object",
+    "description": "Common type for all glTF JSON objects that are elements of top-level arrays.",
     "$ref": "glTFProperty.schema.json",
     "properties": {
         "name": {
+            "title": "Name",
             "type": "string",
-            "description": "The user-defined name of this object.",
-            "gltf_detailedDescription": "The user-defined name of this object.  This is not necessarily unique, e.g., an accessor and a buffer could have the same name, or two accessors could even have the same name."
+            "description": "The user-defined object name."
         }
     }
 }

@@ -3,16 +3,18 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/texture.schema.json",
     "title": "Texture",
     "type": "object",
-    "description": "A texture and its sampler.",
+    "description": "References to the texture's source and sampler.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "sampler": {
+            "title": "Sampler Index",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping in both directions and implementation-dependent default texture filtering is used."
+            "description": "The index of the sampler."
         },
         "source": {
+            "title": "Image Index",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the image used by this texture. When undefined, an extension or other mechanism **SHOULD** supply an alternate texture source, otherwise behavior is undefined."
+            "description": "The index of the image."
         }
     }
 }

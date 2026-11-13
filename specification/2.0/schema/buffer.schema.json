@@ -3,19 +3,20 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/buffer.schema.json",
     "title": "Buffer",
     "type": "object",
-    "description": "A buffer points to binary geometry, animation, or skins.",
+    "description": "Reference to a binary buffer resource.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "byteLength": {
+            "title": "Byte Length",
             "type": "integer",
             "description": "The length of the buffer in bytes.",
             "minimum": 1
         },
         "uri": {
+            "title": "IRI (or URI)",
             "type": "string",
-            "description": "The URI (or IRI) of the buffer.",
-            "format": "iri-reference",
-            "gltf_detailedDescription": "The URI (or IRI) of the buffer.  Relative paths are relative to the current glTF asset.  Instead of referencing an external file, this field **MAY** contain a `data:`-URI."
+            "description": "The identifier used to retrieve the buffer data.",
+            "format": "iri-reference"
         }
     },
     "required": [ "byteLength" ]
