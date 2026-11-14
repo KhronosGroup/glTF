@@ -171,6 +171,9 @@
                 "$ref": "texture.schema.json"
             },
             "minItems": 1
+        },
+        "uniqueIds": {
+            "$ref": "uniqueIds.schema.json"
         }
     },
     "dependentRequired": {

@@ -1,0 +1,31 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/uniqueIds.schema.json",
+    "title": "Unique IDs",
+    "type": "object",
+    "description": "A dictionary mapping file-unique IDs to objects that contain a JSON pointer.",
+    "minProperties": 1,
+    "propertyNames": {
+        "minLength": 1,
+        "not": {
+            "pattern": "[\"#*,.:|?@<>{}\\[\\]/\\\\%\\u0000-\\u001F\\u007F-\\u009F]"
+        }
+    },
+    "additionalProperties": {
+        "$ref": "glTFProperty.schema.json",
+        "type": "object",
+        "properties": {
+            "pointer": {
+                "type": "string",
+                "format": "json-pointer",
+                "pattern": "^(/([^/~]|~[01])*)+$",
+                "not": {
+                    "pattern": "^/uniqueIds(?:/|$)"
+                },
+                "description": "JSON pointer to an existing element within the same glTF asset.",
+                "minLength": 1
+            }
+        },
+        "required": [ "pointer" ]
+    }
+}

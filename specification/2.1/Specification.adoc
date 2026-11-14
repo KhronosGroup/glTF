@@ -732,7 +732,54 @@ Indices **MUST** be non-negative integer numbers. Indices **MUST** always point 
 
 Optional _names_ are used for application-specific uses such as display. Any top-level glTF object **MAY** have a `name` string property for this purpose. These property values are not guaranteed to be unique as they are intended to contain values created when the asset was authored.
 
-Optional file-unique IDs (UIDs) **MAY** be added to the object. Unique IDs **MUST NOT** be empty strings and **MUST NOT** contain the following characters: `"`, `#`, `*`, `,`, `.`, `:`, `|`, `?`, `@`, `<`, `>`, `{`, `}`, `[`, `]`, `/`, literal `\`, literal `%`, or any control characters.
+Optional file-unique IDs (UIDs) **MAY** be added to the top-level `uniqueIds` object. Each key is a UID and **MUST** be unique within that object. Unique IDs **MUST NOT** be empty strings and **MUST NOT** contain the following characters: `"`, `#`, `*`, `,`, `.`, `:`, `|`, `?`, `@`, `<`, `>`, `{`, `}`, `[`, `]`, `/`, literal `\`, literal `%`, or any control characters.
+
+Each unique ID key in the `uniqueIds` object is associated with an object containing a `pointer` property. The `pointer` string is a JSON pointer that points to an existing element within the asset's glTF JSON. The `pointer` property **MUST NOT** point to the `uniqueIds` object or its contents, and **MUST NOT** be an empty string.
+
+[NOTE]
+.Example
+====
+In the following example, unique IDs are used to define named pointers to 4 different nodes.
+
+[source,json]
+----
+{
+    "asset": {
+        "version": "2.1"
+    },
+    "scene": 0,
+    "scenes": [ { "nodes": [0] } ],
+    "uniqueIds": {
+        "rootNode": {
+            "pointer": "/nodes/0"
+        },
+        "topNode": {
+            "pointer": "/nodes/1"
+        },
+        "centerNode": {
+            "pointer": "/nodes/2"
+        },
+        "bottomNode": {
+            "pointer": "/nodes/3"
+        }
+    },
+    "nodes": [
+        {
+            "children": [1, 2, 3]
+        },
+        {
+            "translation": [0.0, 2.0, 0.0]
+        },
+        {
+            "translation": [0.0, 0.0, 0.0]
+        },
+        {
+            "translation": [0.0, -2.0, 0.0]
+        }
+    ]
+}
+----
+====
 
 Whereas indices are used for internal glTF references, file-unique IDs can be used for externally referencing elements in glTF files in a stable and unambiguous way. Such external references are exact case-sensitive matches.
 
