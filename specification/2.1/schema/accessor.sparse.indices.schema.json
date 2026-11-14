@@ -21,17 +21,17 @@
             "anyOf": [
                 {
                     "const": 5121,
-                    "description": "UNSIGNED_BYTE",
+                    "description": "8-bit unsigned integer (uint8).",
                     "type": "integer"
                 },
                 {
                     "const": 5123,
-                    "description": "UNSIGNED_SHORT",
+                    "description": "16-bit unsigned integer (uint16).",
                     "type": "integer"
                 },
                 {
                     "const": 5125,
-                    "description": "UNSIGNED_INT",
+                    "description": "32-bit unsigned integer (uint32).",
                     "type": "integer"
                 },
                 {
