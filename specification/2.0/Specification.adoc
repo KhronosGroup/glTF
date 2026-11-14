@@ -2128,7 +2128,7 @@ Although the `skeleton` property is not needed for computing skinning transforms
 
 The joint hierarchy used for controlling skinned mesh pose is simply the node hierarchy, with each node designated as a _joint_ by a reference from the `joints` array.
 
-Joints of a skin **MUST** have a common ancestor node called _common root_, which may or may not be a joint node itself.
+Joints of a skin **MUST** have a common ancestor node, which may or may not be a joint node itself.
 
 [NOTE]
 .Implementation Note
@@ -2179,7 +2179,8 @@ This example instantiates the same mesh twice: without any transforms and with t
 
 After applying the node's global transform, mesh vertex position values are meters.
 
-When a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, _triangle strips_, or _triangle fans_), the determinant of the node's global transform defines the winding order of the instantiated mesh primitives:
+When a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, _triangle strips_, or _triangle fans_) and it is instantiated without skinning, i.e., the mesh primitive does not contain skinning-related attributes or the instantiating node does not define the `skin` property, the winding order of the instantiated mesh primitive is defined by the determinant of the instantiating node's global transform:
+
 - if the determinant is a positive value, the front-facing triangles use the counterclockwise order, and the back-facing triangles use the clockwise order;
 - if the determinant is a negative value, the front-facing triangles use the clockwise order, and the back-facing triangles use the counterclockwise order.
 
@@ -2187,6 +2188,8 @@ When a mesh primitive uses any triangle-based topology (i.e., _triangle lists_, 
 .Implementation Note
 ====
 Switching the winding order to clockwise enables mirroring geometry via negative scale transforms.
+
+Determining the winding order of skinned mesh primitives is described in the <<instantiation-skinned,Skinned Mesh Primitives>> section below.
 ====
 
 [[instantiation-morph-targets]]
@@ -2227,7 +2230,12 @@ Mesh primitives that do not have skinning-related attributes are instantiated as
 
 If none of the mesh primitives contain skinning-related attributes, the node's `skin` property **SHOULD NOT** be defined.
 
-If the node belongs to a scene, the common root of the joints of the referenced skin **MUST** belong to the same scene.
+If the node belongs to a scene, the common ancestor of the joints of the referenced skin **MUST** belong to the same scene.
+
+When a skinned mesh primitive uses any triangle-based topology, the winding order of the instantiated mesh primitive is defined by the determinant of the global transform of either the node specified by the skin's `skeleton` property (if it is defined) or the lowest common ancestor node of the skin's joint nodes (if the skin's `skeleton` property is not defined):
+
+- if the determinant is a positive value, the front-facing triangles use the counterclockwise order, and the back-facing triangles use the clockwise order;
+- if the determinant is a negative value, the front-facing triangles use the clockwise order, and the back-facing triangles use the counterclockwise order.
 
 All joint indices provided by the `JOINTS_n` vertex attribute accessors of the skinned mesh primitives **MUST** be less than the number of elements of the `joints` array of the referenced skin object.
 
