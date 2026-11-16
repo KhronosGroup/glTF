@@ -1,36 +1,34 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "camera.perspective.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/camera.perspective.schema.json",
     "title": "Camera Perspective",
     "type": "object",
-    "description": "A perspective camera containing properties to create a perspective projection matrix.",
-    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "description": "Perspective projection parameters.",
+    "$ref": "glTFProperty.schema.json",
     "properties": {
         "aspectRatio": {
             "type": "number",
-            "description": "The floating-point aspect ratio of the field of view.",
-            "exclusiveMinimum": 0.0,
-            "gltf_detailedDescription": "The floating-point aspect ratio of the field of view. When undefined, the aspect ratio of the rendering viewport **MUST** be used."
+            "description": "The floating-point aspect ratio of the field of view. When undefined, the camera uses the viewport's aspect ratio.",
+            "exclusiveMinimum": 0.0
         },
         "yfov": {
+            "title": "Y FoV",
             "type": "number",
-            "description": "The floating-point vertical field of view in radians. This value **SHOULD** be less than π.",
+            "description": "The vertical field of view in radians.",
             "exclusiveMinimum": 0.0
         },
         "zfar": {
+            "title": "Z Far",
             "type": "number",
-            "description": "The floating-point distance to the far clipping plane.",
-            "exclusiveMinimum": 0.0,
-            "gltf_detailedDescription": "The floating-point distance to the far clipping plane. When defined, `zfar` **MUST** be greater than `znear`. If `zfar` is undefined, client implementations **SHOULD** use infinite projection matrix."
+            "description": "The distance to the far clipping plane. When undefined, the far clipping plane is at infinity.",
+            "exclusiveMinimum": 0.0
         },
         "znear": {
+            "title": "Z Near",
             "type": "number",
             "description": "The floating-point distance to the near clipping plane.",
-            "exclusiveMinimum": 0.0,
-            "gltf_detailedDescription": "The floating-point distance to the near clipping plane."
-        },
-        "extensions": { },
-        "extras": { }
+            "exclusiveMinimum": 0.0
+        }
     },
     "required": [ "yfov", "znear" ]
 }

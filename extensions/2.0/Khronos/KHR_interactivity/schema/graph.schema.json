@@ -1,0 +1,48 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "graph.schema.json",
+    "title": "Behavior graph",
+    "type": "object",
+    "$ref": "glTFChildOfRootProperty.schema.json",
+    "properties": {
+        "declarations": {
+            "title": "An array of graph declarations.",
+            "type": "array",
+            "items": { "$ref": "graph.declaration.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "events": {
+            "title": "An array of graph events.",
+            "type": "array",
+            "items": { "$ref": "graph.event.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "nodes": {
+            "title": "An array of graph nodes.",
+            "type": "array",
+            "items": { "$ref": "graph.node.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "types": {
+            "title": "An array of graph types.",
+            "type": "array",
+            "items": { "$ref": "graph.type.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        },
+        "variables": {
+            "title": "An array of graph variables.",
+            "type": "array",
+            "items": { "$ref": "graph.variable.schema.json" },
+            "minItems": 1,
+            "maxItems": 2147483648
+        }
+    },
+    "dependentRequired": {
+        "nodes": [ "declarations" ],
+        "variables": [ "types" ]
+    }
+}

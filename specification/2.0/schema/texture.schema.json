@@ -1,22 +1,19 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "texture.schema.json",
+    "$id": "https://schema.khronos.org/gltf/2.0/specification/texture.schema.json",
     "title": "Texture",
     "type": "object",
-    "description": "A texture and its sampler.",
-    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "description": "Combination of the texture's source and sampler.",
+    "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "sampler": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the sampler used by this texture. When undefined, a sampler with repeat wrapping and auto filtering **SHOULD** be used."
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the sampler."
         },
         "source": {
-            "allOf": [ { "$ref": "glTFid.schema.json" } ],
-            "description": "The index of the image used by this texture. When undefined, an extension or other mechanism **SHOULD** supply an alternate texture source, otherwise behavior is undefined."
-        },
-        "name": { },
-        "extensions": { },
-        "extras": { }
-    },
-    "gltf_webgl": "`createTexture()`, `deleteTexture()`, `bindTexture()`, `texImage2D()`, and `texParameterf()`"
+            "title": "Image",
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the image."
+        }
+    }
 }

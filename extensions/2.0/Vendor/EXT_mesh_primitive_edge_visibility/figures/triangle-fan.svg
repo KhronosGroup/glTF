@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="110" style="background-color:white" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top horizontal line -->
+  <line x1="20" y1="20" x2="180" y2="20" stroke="black" stroke-width="2"/>
+  
+  <!-- Left vertical line -->
+  <line x1="20" y1="20" x2="20" y2="80" stroke="black" stroke-width="2"/>
+  
+  <!-- Right vertical line -->
+  <line x1="180" y1="20" x2="180" y2="80" stroke="black" stroke-width="2"/>
+  
+  <!-- Bottom horizontal line -->
+  <line x1="20" y1="80" x2="180" y2="80" stroke="black" stroke-width="2"/>
+  
+  <!-- Middle vertical line -->
+  <line x1="100" y1="20" x2="100" y2="80" stroke="black" stroke-width="2"/>
+  
+  <!-- Left diagonal -->
+  <line x1="20" y1="20" x2="100" y2="80" stroke="black" stroke-width="2"/>
+  
+  <!-- Right diagonal -->
+  <line x1="180" y1="20" x2="100" y2="80" stroke="black" stroke-width="2"/>
+  
+  <!-- Labels -->
+  <text x="100" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="black">0</text>
+  <text x="20" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="black">1</text>
+  <text x="20" y="15" text-anchor="middle" font-family="Arial" font-size="14" fill="black">2</text>
+  <text x="100" y="15" text-anchor="middle" font-family="Arial" font-size="14" fill="black">3</text>
+  <text x="180" y="15" text-anchor="middle" font-family="Arial" font-size="14" fill="black">4</text>
+  <text x="180" y="100" text-anchor="middle" font-family="Arial" font-size="14" fill="black">5</text>
+</svg>
