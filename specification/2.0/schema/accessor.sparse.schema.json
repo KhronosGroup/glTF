@@ -3,21 +3,19 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/accessor.sparse.schema.json",
     "title": "Accessor Sparse",
     "type": "object",
-    "description": "Sparse storage of accessor values that deviate from their initialization value.",
+    "description": "The descriptor of sparsely-encoded accessor elements.",
     "$ref": "glTFProperty.schema.json",
     "properties": {
         "count": {
             "type": "integer",
-            "description": "Number of deviating accessor values stored in the sparse array.",
+            "description": "The number of replaced accessor elements.",
             "minimum": 1
         },
         "indices": {
-            "$ref": "accessor.sparse.indices.schema.json",
-            "description": "An object pointing to a buffer view containing the indices of deviating accessor values. The number of indices is equal to `count`. Indices **MUST** strictly increase."
+            "$ref": "accessor.sparse.indices.schema.json"
         },
         "values": {
-            "$ref": "accessor.sparse.values.schema.json",
-            "description": "An object pointing to a buffer view containing the deviating accessor values."
+            "$ref": "accessor.sparse.values.schema.json"
         }
     },
     "required": [ "count", "indices", "values" ]

@@ -12,29 +12,26 @@
             "items": {
                 "$ref": "accessor.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of accessors.  An accessor is a typed view into a bufferView."
+            "minItems": 1
         },
         "animations": {
             "type": "array",
-            "description": "An array of keyframe animations.",
+            "description": "An array of animations.",
             "items": {
                 "$ref": "animation.schema.json"
             },
             "minItems": 1
         },
         "asset": {
-            "$ref": "asset.schema.json",
-            "description": "Metadata about the glTF asset."
+            "$ref": "asset.schema.json"
         },
         "bufferViews": {
             "type": "array",
-            "description": "An array of bufferViews.",
+            "description": "An array of buffer views.",
             "items": {
                 "$ref": "bufferView.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of bufferViews.  A bufferView is a view into a buffer generally representing a subset of the buffer."
+            "minItems": 1
         },
         "buffers": {
             "type": "array",
@@ -42,8 +39,7 @@
             "items": {
                 "$ref": "buffer.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of buffers.  A buffer points to binary geometry, animation, or skins."
+            "minItems": 1
         },
         "cameras": {
             "type": "array",
@@ -51,12 +47,11 @@
             "items": {
                 "$ref": "camera.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of cameras.  A camera defines a projection matrix."
+            "minItems": 1
         },
         "extensionsRequired": {
             "type": "array",
-            "description": "Names of glTF extensions required to properly load this asset.",
+            "description": "Names of glTF extensions required to properly load the asset.",
             "items": {
                 "type": "string"
             },
@@ -65,7 +60,7 @@
         },
         "extensionsUsed": {
             "type": "array",
-            "description": "Names of glTF extensions used in this asset.",
+            "description": "Names of glTF extensions used in the asset.",
             "items": {
                 "type": "string"
             },
@@ -78,8 +73,7 @@
             "items": {
                 "$ref": "image.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of images.  An image defines data used to create a texture."
+            "minItems": 1
         },
         "materials": {
             "type": "array",
@@ -87,8 +81,7 @@
             "items": {
                 "$ref": "material.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of materials.  A material defines the appearance of a primitive."
+            "minItems": 1
         },
         "meshes": {
             "type": "array",
@@ -96,8 +89,7 @@
             "items": {
                 "$ref": "mesh.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of meshes.  A mesh is a set of primitives to be rendered."
+            "minItems": 1
         },
         "nodes": {
             "type": "array",
@@ -113,13 +105,12 @@
             "items": {
                 "$ref": "sampler.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of samplers.  A sampler contains properties for texture filtering and wrapping modes."
+            "minItems": 1
         },
         "scene": {
+            "title": "Scene",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the default scene.",
-            "gltf_detailedDescription": "The index of the default scene.  This property **MUST NOT** be defined, when `scenes` is undefined."
+            "description": "The index of the default scene."
         },
         "scenes": {
             "type": "array",
@@ -135,8 +126,7 @@
             "items": {
                 "$ref": "skin.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of skins.  A skin is defined by joints and matrices."
+            "minItems": 1
         },
         "textures": {
             "type": "array",

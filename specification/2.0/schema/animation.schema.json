@@ -3,12 +3,12 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/animation.schema.json",
     "title": "Animation",
     "type": "object",
-    "description": "A keyframe animation.",
+    "description": "Descriptors of the animated properties (channels) and their keyframe data (samplers).",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "channels": {
             "type": "array",
-            "description": "An array of animation channels. An animation channel combines an animation sampler with a target property being animated. Different channels of the same animation **MUST NOT** have the same targets.",
+            "description": "An array of animation channels.",
             "items": {
                 "$ref": "animation.channel.schema.json"
             },
@@ -16,7 +16,7 @@
         },
         "samplers": {
             "type": "array",
-            "description": "An array of animation samplers. An animation sampler combines timestamps with a sequence of output values and defines an interpolation algorithm.",
+            "description": "An array of animation samplers.",
             "items": {
                 "$ref": "animation.sampler.schema.json"
             },
