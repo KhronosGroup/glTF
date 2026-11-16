@@ -1792,6 +1792,8 @@ Any attribute semantic name that starts with `TEXCOORD_`, `COLOR_`, `JOINTS_`, o
 
 Index values used for the same attribute semantic within a single primitive **MUST NOT** have gaps, i.e., if an indexed attribute semantic name with index `n` is present for any positive `n`, then the same indexed attribute semantic name with index `n-1` **MUST** also be present.
 
+If the asset's minimum version is greater than or equal to `"2.1"`, the restriction above applies only to `JOINTS_n` and `WEIGHTS_n` vertex attribute semantics. Other indexed attribute semantics (i.e., `TEXCOORD_n` and `COLOR_n`) **MAY** omit unused indices; however, that does not imply that client implementations have to support remapping indices used by the asset to the internally-supported range of indices.
+
 [NOTE]
 ====
 The `JOINTS_n` and `WEIGHTS_n` vertex attribute semantics are described in the <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>> section below.
