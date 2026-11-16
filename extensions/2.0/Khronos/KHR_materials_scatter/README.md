@@ -355,6 +355,23 @@ For renderers that do not support full volumetric rendering, it is acceptable to
 
 When `KHR_materials_ior` is present, it sets the IOR for Fresnel calculations at the surface boundary. This applies regardless of scatter mode. In volumetric mode, the IOR also governs refraction of transmitted rays per the definitions in `KHR_materials_volume`.
 
+## Replaced Extension Guidelines
+
+**This section is non-normative**
+
+### KHR\_materials\_diffuse\_transmission
+
+When used in glTF's thin-walled mode (when `KHR_materials_volume` is either not present, or is inert due to `thicknessFactor` being zero), this extension is intended to be a 1:1 replacement for the draft `KHR_materials_diffuse_transmission`. Users of the older draft in thin-walled mode may upgrade to this extension using the following guidelines:
+
+- `diffuseTransmissionFactor` moves to `KHR_materials_transmission` and becomes **`transmissionFactor`**.
+- `diffuseTransmissionTexture` moves to `KHR_materials_transmission` and becomes **`transmissionTexture`**, and the texture contents must move from the alpha channel to the red channel (possibly of a new, separate image).
+- `diffuseTransmissionColorFactor`  moves to `KHR_materials_scatter` and becomes **`multiscatterColorFactor`**.
+- `diffuseTransmissionColorTexture`  moves to `KHR_materials_scatter` and becomes **`multiscatterColorTexture`** using the same RGB texture channels for the color.
+- A new parameter **`scatterStrengthFactor`** is introduced. Set it to `1.0`, indicating fully diffuse transmission (as opposed to specular transmission, which is the default transmission).
+- A new parameter **`scatterAnisotropy`** is introduced. Set it to `0.999`, indicating forward-scattering only, to match the old behavior of `KHR_materials_diffuse_transmission`.
+
+Opposite from thin-walled mode, glTF also offers a volumetric material mode. Note that `KHR_materials_diffuse_transmission` could previously be used along the surface edges of a volumetric material, but the results did not correspond well to the behavior of real-world physical materials. It is recommended to drop `KHR_materials_diffuse_transmission` in favor of `KHR_materials_scatter` in both modes, embracing the fully volumetric definition of scattering when volumetric mode in use, and extending the thin-walled mode with an explicit scatter anisotropy.
+
 ## Implementation
 
 **This section is non-normative**
