@@ -3,38 +3,41 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/accessor.sparse.indices.schema.json",
     "title": "Accessor Sparse Indices",
     "type": "object",
-    "description": "An object pointing to a buffer view containing the indices of deviating accessor values. The number of indices is equal to `accessor.sparse.count`. Indices **MUST** strictly increase.",
+    "description": "The descriptor of the indices of replaced accessor elements.",
     "$ref": "glTFProperty.schema.json",
     "properties": {
         "bufferView": {
+            "title": "Buffer View",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the buffer view with sparse indices. The referenced buffer view **MUST NOT** have its `target` or `byteStride` properties defined. The buffer view and the optional `byteOffset` **MUST** be aligned to the `componentType` byte length."
+            "description": "The index of the buffer view containing the indices of the replaced elements."
         },
         "byteOffset": {
             "type": "integer",
-            "description": "The offset relative to the start of the buffer view in bytes.",
+            "description": "The offset into the buffer view in bytes.",
             "minimum": 0,
             "default": 0
         },
         "componentType": {
-            "description": "The indices data type.",
+            "type": "integer",
+            "description": "The data type of the indices of the replaced elements.",
             "anyOf": [
                 {
+                    "title": "UINT8",
                     "const": 5121,
-                    "description": "UNSIGNED_BYTE",
-                    "type": "integer"
+                    "description": "8-bit unsigned integer (uint8)."
                 },
                 {
+                    "title": "UINT16",
                     "const": 5123,
-                    "description": "UNSIGNED_SHORT",
-                    "type": "integer"
+                    "description": "16-bit unsigned integer (uint16)."
                 },
                 {
+                    "title": "UINT32",
                     "const": 5125,
-                    "description": "UNSIGNED_INT",
-                    "type": "integer"
+                    "description": "32-bit unsigned integer (uint32)."
                 },
                 {
+                    "title": "Custom Index Data Type",
                     "type": "integer"
                 }
             ]

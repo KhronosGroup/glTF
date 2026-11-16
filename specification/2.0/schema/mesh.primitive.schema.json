@@ -11,58 +11,56 @@
             "description": "A JSON object that maps attribute semantic names to the indices of accessors providing the corresponding data.",
             "minProperties": 1,
             "additionalProperties": {
+                "title": "Vertex Attribute Accessor",
                 "$ref": "glTFid.schema.json"
             }
         },
         "indices": {
+            "title": "Vertex Indices Accessor",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the accessor that provides the vertex indices.",
-            "gltf_detailedDescription": "The index of the accessor that provides the vertex indices.  The accessor **MUST** have the `SCALAR` type and any of the _uint8_, _uint16_, or _uint32_ effective component types. When undefined, the primitive uses non-indexed geometry."
+            "description": "The index of the accessor that provides the vertex indices. When undefined, the mesh primitive uses non-indexed geometry."
         },
         "material": {
+            "title": "Material",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the material to apply to this primitive when rendering."
+            "description": "The index of the material to apply to the mesh primitive."
         },
         "mode": {
-            "description": "The topology type of primitives to render.",
+            "title": "Topology Type",
+            "type": "integer",
+            "description": "The topology type of the mesh primitive.",
             "default": 4,
             "anyOf": [
                 {
-                    "const": 0,
-                    "description": "POINTS",
-                    "type": "integer"
+                    "title": "Point List",
+                    "const": 0
                 },
                 {
-                    "const": 1,
-                    "description": "LINES",
-                    "type": "integer"
+                    "title": "Line List",
+                    "const": 1
                 },
                 {
-                    "const": 2,
-                    "description": "LINE_LOOP",
-                    "type": "integer"
+                    "title": "Line Loop",
+                    "const": 2
                 },
                 {
-                    "const": 3,
-                    "description": "LINE_STRIP",
-                    "type": "integer"
+                    "title": "Line Strip",
+                    "const": 3
                 },
                 {
-                    "const": 4,
-                    "description": "TRIANGLES",
-                    "type": "integer"
+                    "title": "Triangle List",
+                    "const": 4
                 },
                 {
-                    "const": 5,
-                    "description": "TRIANGLE_STRIP",
-                    "type": "integer"
+                    "title": "Triangle Strip",
+                    "const": 5
                 },
                 {
-                    "const": 6,
-                    "description": "TRIANGLE_FAN",
-                    "type": "integer"
+                    "title": "Triangle Fan",
+                    "const": 6
                 },
                 {
+                    "title": "Custom Topology Type",
                     "type": "integer"
                 }
             ]
@@ -73,6 +71,7 @@
             "items": {
                 "type": "object",
                 "additionalProperties": {
+                    "title": "Vertex Attribute Accessor",
                     "$ref": "glTFid.schema.json"
                 },
                 "description": "A JSON object that maps attribute semantic names to the indices of accessors providing the corresponding morph target difference values."

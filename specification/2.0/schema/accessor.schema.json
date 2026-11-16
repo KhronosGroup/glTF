@@ -3,121 +3,125 @@
     "$id": "https://schema.khronos.org/gltf/2.0/specification/accessor.schema.json",
     "title": "Accessor",
     "type": "object",
-    "description": "A typed view into a buffer view that contains raw binary data.",
+    "description": "Descriptor of a finite non-empty sequence of typed values usually sourced from a buffer view.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "bufferView": {
+            "title": "Buffer View",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the bufferView.",
-            "gltf_detailedDescription": "The index of the buffer view. When undefined, the accessor **MUST** be initialized with zeros; `sparse` property or extensions **MAY** override zeros with actual values."
+            "description": "The index of the buffer view. When undefined, elements are sourced from an infinite sequence of zero bytes or provided by an extension."
         },
         "byteOffset": {
             "type": "integer",
-            "description": "The offset relative to the start of the buffer view in bytes.",
+            "description": "The offset into the buffer view in bytes.",
             "minimum": 0,
-            "default": 0,
-            "gltf_detailedDescription": "The offset relative to the start of the buffer view in bytes.  This **MUST** be a multiple of the size of the component datatype. This property **MUST NOT** be defined when `bufferView` is undefined."
+            "default": 0
         },
         "componentType": {
-            "description": "The datatype of the accessor's components.",
-            "gltf_detailedDescription": "The datatype of the accessor's components.  UNSIGNED_INT type **MUST NOT** be used for any accessor that is not referenced by `mesh.primitive.indices`.",
+            "description": "The data type of the accessor's components.",
+            "type": "integer",
             "anyOf": [
                 {
+                    "title": "SINT8 or SNORM8",
                     "const": 5120,
-                    "description": "BYTE",
-                    "type": "integer"
+                    "description": "8-bit signed integer (sint8) or 8-bit signed normalized integer (snorm8)."
                 },
                 {
+                    "title": "UINT8 or UNORM8",
                     "const": 5121,
-                    "description": "UNSIGNED_BYTE",
-                    "type": "integer"
+                    "description": "8-bit unsigned integer (uint8) or 8-bit unsigned normalized integer (unorm8)."
                 },
                 {
+                    "title": "SINT16 or SNORM16",
                     "const": 5122,
-                    "description": "SHORT",
-                    "type": "integer"
+                    "description": "16-bit signed integer (sint16) or 16-bit signed normalized integer (snorm16)."
                 },
                 {
+                    "title": "UINT16 or UNORM16",
                     "const": 5123,
-                    "description": "UNSIGNED_SHORT",
-                    "type": "integer"
+                    "description": "16-bit unsigned integer (uint16) or 16-bit unsigned normalized integer (unorm16)."
                 },
                 {
+                    "title": "UINT32",
                     "const": 5125,
-                    "description": "UNSIGNED_INT",
-                    "type": "integer"
+                    "description": "32-bit unsigned integer (uint32)."
                 },
                 {
+                    "title": "FLOAT32",
                     "const": 5126,
-                    "description": "FLOAT",
-                    "type": "integer"
+                    "description": "32-bit floating-point number (float32) in IEEE 754 single-precision format (binary32)."
                 },
                 {
+                    "title": "Custom Component Type",
                     "type": "integer"
                 }
             ]
         },
         "count": {
             "type": "integer",
-            "description": "The number of elements referenced by this accessor.",
-            "minimum": 1,
-            "gltf_detailedDescription": "The number of elements referenced by this accessor, not to be confused with the number of bytes or number of components."
+            "description": "The number of elements provided by the accessor.",
+            "minimum": 1
         },
         "max": {
             "type": "array",
-            "description": "Maximum value of each component in this accessor.",
+            "description": "Maximum value of each component as provided by the accessor. Array length corresponds to the accessor's type.",
             "items": {
                 "type": "number"
             },
             "minItems": 1,
-            "maxItems": 16,
-            "gltf_detailedDescription": "Maximum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property **MUST** contain maximum values of accessor data with sparse substitution applied."
+            "maxItems": 16
         },
         "min": {
             "type": "array",
-            "description": "Minimum value of each component in this accessor.",
+            "description": "Minimum value of each component as provided by the accessor. Array length corresponds to the accessor's type.",
             "items": {
                 "type": "number"
             },
             "minItems": 1,
-            "maxItems": 16,
-            "gltf_detailedDescription": "Minimum value of each component in this accessor.  Array elements **MUST** be treated as having the same data type as accessor's `componentType`. Both `min` and `max` arrays have the same length.  The length is determined by the value of the `type` property; it can be 1, 2, 3, 4, 9, or 16.\n\n`normalized` property has no effect on array values: they always correspond to the actual values stored in the buffer. When the accessor is sparse, this property **MUST** contain minimum values of accessor data with sparse substitution applied."
+            "maxItems": 16
         },
         "normalized": {
             "type": "boolean",
-            "description": "Specifies whether integer data values are normalized before usage.",
-            "default": false,
-            "gltf_detailedDescription": "Specifies whether integer data values are normalized (`true`) to [0, 1] (for unsigned types) or to [-1, 1] (for signed types) when they are accessed. This property **MUST NOT** be set to `true` for accessors with `FLOAT` or `UNSIGNED_INT` component type."
+            "description": "Specifies whether integer values are normalized (divided by the component type's maximum possible value) before usage.",
+            "default": false
         },
         "sparse": {
-            "$ref": "accessor.sparse.schema.json",
-            "description": "Sparse storage of elements that deviate from their initialization value."
+            "$ref": "accessor.sparse.schema.json"
         },
         "type": {
-            "description": "Specifies if the accessor's elements are scalars, vectors, or matrices.",
+            "type": "string",
+            "description": "The dimensionality of the accessor elements.",
             "anyOf": [
                 {
+                    "title": "Scalar",
                     "const": "SCALAR"
                 },
                 {
+                    "title": "Two-component Vector",
                     "const": "VEC2"
                 },
                 {
+                    "title": "Three-component Vector",
                     "const": "VEC3"
                 },
                 {
+                    "title": "Four-component Vector",
                     "const": "VEC4"
                 },
                 {
+                    "title": "2x2 Matrix",
                     "const": "MAT2"
                 },
                 {
+                    "title": "3x3 Matrix",
                     "const": "MAT3"
                 },
                 {
+                    "title": "4x4 Matrix",
                     "const": "MAT4"
                 },
                 {
+                    "title": "Custom Element Type",
                     "type": "string"
                 }
             ]

@@ -1,7 +1,8 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://schema.khronos.org/gltf/2.0/specification/glTFid.schema.json",
-    "title": "glTF Id",
+    "title": "glTF Index",
     "type": "integer",
+    "description": "Common type for all properties that refer to an array element.",
     "minimum": 0
 }
