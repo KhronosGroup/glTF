@@ -1,0 +1,23 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.0/extensions/Khronos/KHR_environment_sky/glTF.KHR_environment_sky.sky.panorama.schema.json",
+    "title": "KHR_environment_sky Panorama Sky Parameters",
+    "type": "object",
+    "description": "Panorama skies use a texture or set of textures to represent the sky.",
+    "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
+    "properties": {
+        "cubemap": {
+            "type": "array",
+            "description": "The indices of 6 textures making up a cubemap in the glTF `textures` array, in KTX 2.0 face order and orientation (+X, -X, +Y, -Y, +Z, -Z), where KTX's +X axis points in glTF's -X direction.",
+            "items": {
+                "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFid.schema.json"
+            },
+            "minItems": 6,
+            "maxItems": 6
+        },
+        "equirectangular": {
+            "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFid.schema.json",
+            "description": "The index of an equirectangular panorama texture in the glTF `textures` array."
+        }
+    }
+}

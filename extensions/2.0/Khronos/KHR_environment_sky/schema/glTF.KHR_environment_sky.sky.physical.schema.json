@@ -1,0 +1,62 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.0/extensions/Khronos/KHR_environment_sky/glTF.KHR_environment_sky.sky.physical.schema.json",
+    "title": "KHR_environment_sky Physical Sky Parameters",
+    "type": "object",
+    "description": "Physical skies use a physically-based model to simulate the scattering of light in the atmosphere.",
+    "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
+    "properties": {
+        "groundColor": {
+            "type": "array",
+            "description": "The tint of the ground below the horizon, multiplied by the light the ground receives from the sun and atmosphere.",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [0.04, 0.02, 0.01]
+        },
+        "mieAnisotropy": {
+            "type": "number",
+            "description": "The anisotropy of Mie scattering (the thing that makes clouds white).",
+            "minimum": -1.0,
+            "maximum": 1.0,
+            "default": 0.8
+        },
+        "mieCoefficient": {
+            "type": "number",
+            "description": "The coefficient of Mie scattering (the thing that makes clouds white) in inverse meters.",
+            "minimum": 0.0,
+            "default": 0.000005
+        },
+        "mieColor": {
+            "type": "array",
+            "description": "The color of Mie scattering (the thing that makes clouds white).",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [1.0, 1.0, 1.0]
+        },
+        "rayleighCoefficient": {
+            "type": "number",
+            "description": "The coefficient of Rayleigh scattering (the thing that makes the sky blue) in inverse meters.",
+            "minimum": 0.0,
+            "default": 0.00003
+        },
+        "rayleighColor": {
+            "type": "array",
+            "description": "The color of Rayleigh scattering (the thing that makes the sky blue).",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [0.3, 0.5, 1.0]
+        }
+    }
+}
