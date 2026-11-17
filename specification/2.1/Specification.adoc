@@ -4305,7 +4305,7 @@ In GLBv3, chunk <<chunks-v3,alignment padding>> is not included in the chunk len
 ====
 
 [[chunks-bin]]
-===== Binary buffer
+===== Binary Buffer
 
 This chunk contains a binary payload that usually provides data for a glTF buffer. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
 

@@ -42,9 +42,9 @@
                     "description": "16-bit unsigned integer (uint16) or 16-bit unsigned normalized integer (unorm16)."
                 },
                 {
+                    "title": "SINT32",
                     "const": 5124,
-                    "description": "32-bit signed integer (sint32).",
-                    "type": "integer"
+                    "description": "32-bit signed integer (sint32)."
                 },
                 {
                     "title": "UINT32",
@@ -57,24 +57,24 @@
                     "description": "32-bit floating-point number (float32) in IEEE 754 single-precision format (binary32)."
                 },
                 {
+                    "title": "FLOAT64",
                     "const": 5130,
-                    "description": "64-bit floating-point number (float64) in IEEE 754 double-precision format (binary64).",
-                    "type": "integer"
+                    "description": "64-bit floating-point number (float64) in IEEE 754 double-precision format (binary64)."
                 },
                 {
+                    "title": "FLOAT16",
                     "const": 5131,
-                    "description": "16-bit floating-point number (float16) in IEEE 754 half-precision format (binary16).",
-                    "type": "integer"
+                    "description": "16-bit floating-point number (float16) in IEEE 754 half-precision format (binary16)."
                 },
                 {
+                    "title": "SINT64",
                     "const": 5134,
-                    "description": "64-bit signed integer (sint64).",
-                    "type": "integer"
+                    "description": "64-bit signed integer (sint64)."
                 },
                 {
+                    "title": "UINT64",
                     "const": 5135,
-                    "description": "64-bit unsigned integer (uint64).",
-                    "type": "integer"
+                    "description": "64-bit unsigned integer (uint64)."
                 },
                 {
                     "title": "Custom Component Type",

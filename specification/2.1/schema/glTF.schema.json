@@ -73,8 +73,7 @@
             "items": {
                 "$ref": "externalAsset.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of external assets.  An external asset references a file in the `files` array and may be instantiated by any node."
+            "minItems": 1
         },
         "files": {
             "type": "array",
@@ -82,8 +81,7 @@
             "items": {
                 "$ref": "file.schema.json"
             },
-            "minItems": 1,
-            "gltf_detailedDescription": "An array of file references.  A file reference is a pointer to an external file."
+            "minItems": 1
         },
         "images": {
             "type": "array",

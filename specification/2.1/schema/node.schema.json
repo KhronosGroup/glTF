@@ -7,7 +7,7 @@
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "boundingVolume": {
-            "allOf": [ { "$ref": "boundingVolume.schema.json" } ],
+            "$ref": "node.boundingVolume.schema.json",
             "description": "The bounding volume of the node."
         },
         "camera": {
@@ -25,6 +25,10 @@
             "uniqueItems": true,
             "minItems": 1
         },
+        "externalAsset": {
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the external asset in this node. Cannot be used together with `mesh`."
+        },
         "matrix": {
             "type": "array",
             "description": "A 4x4 transformation matrix stored in column-major order.",
@@ -39,10 +43,6 @@
             "title": "Mesh",
             "$ref": "glTFid.schema.json",
             "description": "The index of the mesh."
-        },
-        "externalAsset": {
-            "$ref": "glTFid.schema.json",
-            "description": "The index of the external asset in this node. Cannot be used together with `mesh`."
         },
         "rotation": {
             "type": "array",
