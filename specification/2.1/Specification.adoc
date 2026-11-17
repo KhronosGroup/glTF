@@ -274,6 +274,9 @@ CIPA DC-008-Translation-2019
 _Exchangeable image file format for digital still cameras_
 <https://www.cipa.jp/std/documents/download_e.html?DC-008-Translation-2019-E>
 
+* [[webp]]
+Zern, J., Massimino, P., and J. Alakuijala, _WebP Image Format_, RFC 9649, DOI 10.17487/RFC9649, November 2024, <https://www.rfc-editor.org/info/rfc9649/>
+
 * [[data-url]]
 Masinter, L., _The "data" URL scheme_, RFC 2397, DOI 10.17487/RFC2397, August 1998, <https://www.rfc-editor.org/info/rfc2397>
 
@@ -344,6 +347,11 @@ Freed, N. and N. Borenstein, _Multipurpose Internet Mail Extensions (MIME) Part 
 IANA.
 _image/png Media Type_.
 https://www.iana.org/assignments/media-types/image/png
+
+* [[image-webp]]
+IANA.
+_image/webp Media Type_.
+https://www.iana.org/assignments/media-types/image/webp
 
 [[motivation]]
 == Motivation and Design Goals (Informative)
@@ -1037,6 +1045,50 @@ Keeping double precision for intermediate values usually helps with preventing v
 .Implementation Note
 ====
 When the scale is zero on all three axes (by node transform or by animated scale), implementations are free to optimize away rendering of the node's mesh, and all of the node's children's meshes. This provides a mechanism to animate visibility. Skinned meshes must not use this optimization unless all of the joints in the skin are scaled to zero simultaneously.
+====
+
+[[visibility]]
+=== Visibility
+
+If the asset's minimum version is greater than or equal to `"2.1"`, the visibility of node hierarchies can be explicitly controlled by setting the corresponding `visible` properties.
+
+[NOTE]
+.Implementation Note
+====
+Implementations might ignore the `visible` property without setting the minimum version due to forward-compatibility rules.
+
+If setting the minimum version is not desirable, consider using the functionally equivalent `KHR_node_visibility` extension instead.
+====
+
+The node's `visibility` property controls visibility of the node that contains it and all its children nodes recursively. A value of `false` causes all descendant nodes to be omitted from display, even any nodes below that have a visibility value of `true`.
+
+[NOTE]
+.Implementation Note
+====
+In other words, a node is visible if and only if its own `visible` property is `true` and all its ancestors are visible. This allows a single change of a `visible` property at a high level of the hierarchy to hide or show complex (multi-node) objects.
+====
+
+When a node is not visible, all its visual features including but not limited to meshes, light sources, point clouds, particles, billboards, volumetric effects, etc., are not rendered. Visibility does not affect cameras.
+
+[NOTE]
+.Example
+====
+In the following example, both nodes (and therefore their meshes) are not visible.
+
+```json
+{
+    "nodes": [
+        {
+            "children": [ 1 ],
+            "mesh": 0,
+            "visible": false
+        },
+        {
+            "mesh": 1
+        }
+    ]
+}
+```
 ====
 
 [[bounding-volumes]]
@@ -1775,6 +1827,37 @@ Future specification versions or extensions **MAY** define new attribute semanti
                                     _unorm16_                   | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 |====
 
+If the asset's minimum version is greater than or equal to `"2.1"`, the table above is extended to include the following effective component types.
+
+[options="header",cols="20%,20%,30%"]
+|====
+| Semantic Name | Accessor Type(s)| Effective Component Type(s)
+| `POSITION`    | VEC3            | _sint8_ +
+                                    _snorm8_ +
+                                    _uint8_ +
+                                    _unorm8_ +
+                                    _sint16_ +
+                                    _snorm16_ +
+                                    _uint16_ +
+                                    _unorm16_
+| `NORMAL`      | VEC3            | _snorm8_ +
+                                    _snorm16_
+| `TANGENT`     | VEC4            | _snorm8_ +
+                                    _snorm16_
+| `TEXCOORD_n`  | VEC2            | _sint8_ +
+                                    _snorm8_ +
+                                    _uint8_ +
+                                    _sint16_ +
+                                    _snorm16_ +
+                                    _uint16_
+|====
+
+[NOTE]
+.Implementation Note
+====
+If setting the minimum version is not desirable, consider using the functionally equivalent `KHR_mesh_quantization` extension instead.
+====
+
 All attribute semantics defined in this table except `JOINTS_n` are inherently continuous, i.e., they provide real numbers, and the `JOINTS_n` attribute semantic is inherently discrete, i.e., it provides non-negative integers, regardless of the storage method used.
 
 The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names have the form `[semantic]_[index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. The following rules apply to the `[index]` syntax:
@@ -2050,6 +2133,29 @@ Accessors of the _uint32_ effective component type **SHOULD NOT** be used for mo
                                     _unorm8_ +
                                     _unorm16_                   | RGB or RGBA color deltas
 |====
+
+If the asset's minimum version is greater than or equal to `"2.1"`, the table above is extended to include the following effective component types.
+
+[options="header",cols="20%,20%,30%"]
+|====
+| Semantic Name | Accessor Type(s)| Effective Component Type(s)
+| `POSITION`    | VEC3            | _sint8_ +
+                                    _snorm8_ +
+                                    _sint16_ +
+                                    _snorm16_
+| `NORMAL`      | VEC3            | _snorm8_ +
+                                    _snorm16_
+| `TANGENT`     | VEC4            | _snorm8_ +
+                                    _snorm16_
+| `TEXCOORD_n`  | VEC2            | _sint8_
+                                    _sint16_
+|====
+
+[NOTE]
+.Implementation Note
+====
+If setting the minimum version is not desirable, consider using the functionally equivalent `KHR_mesh_quantization` extension instead.
+====
 
 Client implementations **SHOULD** support at least three attributes -- `POSITION`, `NORMAL`, and `TANGENT` -- for morphing. Client implementations **MAY** optionally support morphed `TEXCOORD_n` and/or `COLOR_n` attributes.
 
@@ -2482,6 +2588,14 @@ Image objects are stored in the asset's `images` array.
 
 An image object represents a reference to an image resource. The glTF 2.1 specification supports only image resources stored in PNG and JPEG image formats (further defined below). Support for other image formats **MAY** be added by extensions or future Specification versions.
 
+If the asset's minimum version is greater than or equal to `"2.1"`, image resources stored in the WebP image format are also supported.
+
+[NOTE]
+.Implementation Note
+====
+If setting the minimum version is not desirable, consider using the functionally equivalent `EXT_texture_webp` extension instead.
+====
+
 The image reference is given either by the `bufferView` or `uri` properties; exactly one of these two properties **MUST** be defined.
 
 If the `uri` property is defined, it either provides an IRI-reference to the external image file, or embeds the image using a data URL. When a data URL is used for image storage, the `mediatype` field of the URL **MUST** be set to the media type of the embedded image data. If the IRI-reference cannot be resolved, the image's content is undefined and handling of such image objects is implementation-dependent.
@@ -2519,11 +2633,14 @@ This example shows an image pointing to an external PNG image file and another i
 
 Client implementations **MAY** need to manually determine image media types. In such a case, the following table **SHOULD** be used to derive the media type based in the values of the first few bytes of the resource.
 
+Bytes marked as `0xXX` are ignored when matching the pattern.
+
 [options="header"]
 |====
 | Media Type   | Pattern Length | Pattern Bytes
 | `image/png`  | 8              | `0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A`
 | `image/jpeg` | 3              | `0xFF 0xD8 0xFF`
+| `image/webp` | 15             | `0x52 0x49 0x46 0x46 0xXX 0xXX 0xXX 0xXX 0x57 0x45 0x42 0x50 0x56 0x50 0x38`
 |====
 
 Any colorspace information (such as ICC profiles, intents, gamma values, etc.) found in images **MUST** be ignored. The effective transfer function (encoding) is defined by a glTF object that refers to the image (in most cases it's a texture that is used by a material). The effective color gamut for all images that are used as color textures is ITU-R BT.709.
@@ -2612,6 +2729,25 @@ This restriction ensures that the image's height is equal to the number of lines
 .Rationale
 ====
 JFIF and Exif formats are mutually exclusive. Some of Exif features, e.g., "`Orientation`", may severely impact an asset's portability.
+====
+
+[[images-webp]]
+==== WebP Support
+
+<<webp,WebP>> images **MUST** use the <<image-webp,`image/webp`>> Media Type. WebP images **SHOULD** use the `.webp` file extension when stored as separate files.
+
+If a WebP image does not have an explicit alpha channel, the image is fully opaque, i.e., its alpha channel has a uniform value of stem:[1.0].
+
+The following WebP features **SHOULD NOT** be present and **SHOULD** be ignored by client implementations if encountered:
+
+- ICC profile (`ICCP` chunk);
+- Exchangeable Image File Profile (`EXIF` chunk or embedded in XMP);
+- animations (`ANIM` or `ANMF` chunks).
+
+[NOTE]
+.Rationale
+====
+These features are not universally implemented, can conflict with glTF definitions, and thus they may severely impact an asset's portability, especially, Exif's "`Orientation`".
 ====
 
 [[samplers]]
@@ -2888,6 +3024,34 @@ This material defines its emissive parameter. Since the default emissive factor 
             "emissiveTexture": {
                 "index": 0
             }
+        }
+    ]
+}
+----
+====
+
+If the asset's minimum version is greater than or equal to `"2.1"`, the light source's luminance of one cd·m^-2^ is multiplied by the `emissiveStrength` property value.
+
+[NOTE]
+.Implementation Note
+====
+Implementations might ignore the `emissiveStrength` property without setting the minimum version due to forward-compatibility rules.
+
+If setting the minimum version is not desirable, consider using the functionally equivalent `KHR_materials_emissive_strength` extension instead.
+====
+
+[NOTE]
+.Example
+====
+This material defines its emissive strength as 100, and thus the material's effective luminance is 100{nbsp}cd·m^-2^.
+
+[source,json]
+----
+{
+    "materials": [
+        {
+            "emissiveFactor": [ 1.0, 1.0, 1.0 ],
+            "emissiveStrength": 100
         }
     ]
 }
