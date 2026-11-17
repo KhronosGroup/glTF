@@ -3,7 +3,7 @@
     "$id": "https://schema.khronos.org/gltf/2.1/specification/node.schema.json",
     "title": "Node",
     "type": "object",
-    "description": "A node in the node hierarchy.  When the node contains `skin`, all `mesh.primitives` **MUST** contain `JOINTS_0` and `WEIGHTS_0` attributes.  A node **MAY** have either a `matrix` or any combination of `translation`/`rotation`/`scale` (TRS) properties. TRS properties are converted to matrices and postmultiplied in the `T * R * S` order to compose the transformation matrix; first the scale is applied to the vertices, then the rotation, and then the translation. If none are provided, the transform is the identity. When a node is targeted for animation (referenced by an animation.channel.target), `matrix` **MUST NOT** be present.",
+    "description": "A node in the node hierarchy.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "boundingVolume": {
@@ -11,13 +11,15 @@
             "description": "The bounding volume of the node."
         },
         "camera": {
+            "title": "Camera",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the camera referenced by this node."
+            "description": "The index of the camera."
         },
         "children": {
             "type": "array",
-            "description": "The indices of this node's children.",
+            "description": "The indices of the node's children.",
             "items": {
+                "title": "Node",
                 "$ref": "glTFid.schema.json"
             },
             "uniqueItems": true,
@@ -25,7 +27,7 @@
         },
         "matrix": {
             "type": "array",
-            "description": "A floating-point 4x4 transformation matrix stored in column-major order.",
+            "description": "A 4x4 transformation matrix stored in column-major order.",
             "items": {
                 "type": "number"
             },
@@ -34,8 +36,9 @@
             "default": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ]
         },
         "mesh": {
+            "title": "Mesh",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the mesh in this node."
+            "description": "The index of the mesh."
         },
         "externalAsset": {
             "$ref": "glTFid.schema.json",
@@ -64,9 +67,9 @@
             "default": [ 1.0, 1.0, 1.0 ]
         },
         "skin": {
+            "title": "Skin",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the skin referenced by this node.",
-            "gltf_detailedDescription": "The index of the skin referenced by this node. When a skin is referenced by a node within a scene, all joints used by the skin **MUST** belong to the same scene. When defined, `mesh` **MUST** also be defined."
+            "description": "The index of the skin to use for instantiating a mesh."
         },
         "translation": {
             "type": "array",
@@ -80,7 +83,7 @@
         },
         "weights": {
             "type": "array",
-            "description": "The weights of the instantiated morph target. The number of array elements **MUST** match the number of morph targets of the referenced mesh. When defined, `mesh` **MUST** also be defined.",
+            "description": "The weights to use for instantiating mesh primitives with morph targets. The number of array elements matches the number of morph targets of the mesh.",
             "minItems": 1,
             "items": {
                 "type": "number"

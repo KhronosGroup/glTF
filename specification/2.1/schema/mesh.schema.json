@@ -3,12 +3,12 @@
     "$id": "https://schema.khronos.org/gltf/2.1/specification/mesh.schema.json",
     "title": "Mesh",
     "type": "object",
-    "description": "A set of primitives to be rendered.  Its global transform is defined by a node that references it.",
+    "description": "Mesh primitives to instantiate.",
     "$ref": "glTFChildOfRootProperty.schema.json",
     "properties": {
         "primitives": {
             "type": "array",
-            "description": "An array of primitives, each defining geometry to be rendered.",
+            "description": "An array of mesh primitives.",
             "items": {
                 "$ref": "mesh.primitive.schema.json"
             },
@@ -16,7 +16,7 @@
         },
         "weights": {
             "type": "array",
-            "description": "Array of weights to be applied to the morph targets. The number of array elements **MUST** match the number of morph targets.",
+            "description": "Default morph target weights. The number of array elements matches the number of morph targets of the mesh.",
             "items": {
                 "type": "number"
             },

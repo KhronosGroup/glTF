@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.1/specification/material.textureInfo.schema.json",
+    "title": "Material Texture Info",
+    "type": "object",
+    "description": "Texture index and the index of the associated texture coordinate set.",
+    "$ref": "glTFProperty.schema.json",
+    "properties": {
+        "index": {
+            "title": "Texture",
+            "$ref": "glTFid.schema.json",
+            "description": "The index of the texture."
+        },
+        "texCoord": {
+            "type": "integer",
+            "description": "The index of the texture coordinate set.",
+            "default": 0,
+            "minimum": 0
+        }
+    },
+    "required": [ "index" ]
+}

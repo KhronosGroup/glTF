@@ -3,16 +3,17 @@
     "$id": "https://schema.khronos.org/gltf/2.1/specification/accessor.sparse.values.schema.json",
     "title": "Accessor Sparse Values",
     "type": "object",
-    "description": "An object pointing to a buffer view containing the deviating accessor values. The number of elements is equal to `accessor.sparse.count` times number of components. The elements have the same component type as the base accessor. The elements are tightly packed. Data **MUST** be aligned following the same rules as the base accessor.",
+    "description": "The descriptor of the source of replacement elements.",
     "$ref": "glTFProperty.schema.json",
     "properties": {
         "bufferView": {
+            "title": "Buffer View",
             "$ref": "glTFid.schema.json",
-            "description": "The index of the bufferView with sparse values. The referenced buffer view **MUST NOT** have its `target` or `byteStride` properties defined."
+            "description": "The index of the buffer view containing replacement accessor elements."
         },
         "byteOffset": {
             "type": "integer",
-            "description": "The offset relative to the start of the bufferView in bytes.",
+            "description": "The offset into the buffer view in bytes.",
             "minimum": 0,
             "default": 0
         }

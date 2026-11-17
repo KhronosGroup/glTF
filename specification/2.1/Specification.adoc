@@ -2447,11 +2447,7 @@ The example below instantiates a Morph Target with non-default weights.
 [[instantiation-skinned]]
 ==== Skinned Mesh Primitives
 
-If a node defines the `skin` property, the mesh primitives that contain skinning-related attributes are instantiated as skinned mesh primitives. The `skin` property points to a skin object to use.
-
-Mesh primitives that do not have skinning-related attributes are instantiated as if the `skin` property is not defined.
-
-If none of the mesh primitives contain skinning-related attributes, the node's `skin` property **SHOULD NOT** be defined.
+If a node defines the `skin` property, the node **MUST** also define the `mesh` property and the mesh primitives are instantiated as skinned mesh primitives. The `skin` property points to a skin object to use. All mesh primitives of the referenced mesh **MUST** contain skinning-related attributes (i.e., `JOINTS_n` and `WEIGHTS_n`).
 
 If the node belongs to a scene, the common ancestor of the joints of the referenced skin **MUST** belong to the same scene.
 

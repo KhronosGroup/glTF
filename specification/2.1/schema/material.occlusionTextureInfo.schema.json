@@ -3,15 +3,15 @@
     "$id": "https://schema.khronos.org/gltf/2.1/specification/material.occlusionTextureInfo.schema.json",
     "title": "Material Occlusion Texture Info",
     "type": "object",
-    "$ref": "textureInfo.schema.json",
+    "description": "Occlusion texture index, its strength, and the index of the associated texture coordinate set.",
+    "$ref": "material.textureInfo.schema.json",
     "properties": {
         "strength": {
             "type": "number",
-            "description": "A scalar multiplier controlling the amount of occlusion applied.",
+            "description": "A scalar parameter controlling the amount of occlusion applied. A value of zero means no occlusion; a value of one means the occlusion value sampled from the occlusion texture; intermediate values interpolate the occlusion linearly.",
             "default": 1.0,
             "minimum": 0.0,
-            "maximum": 1.0,
-            "gltf_detailedDescription": "A scalar parameter controlling the amount of occlusion applied. A value of zero means no occlusion; a value of one means the occlusion value sampled from the occlusion texture; intermediate values interpolate the occlusion linearly."
+            "maximum": 1.0
         }
     }
 }
