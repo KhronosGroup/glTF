@@ -682,9 +682,9 @@ The optional `copyright` and `generator` properties provide additional metadata.
 ----
 {
     "asset": {
-        "version": "2.0",
+        "copyright": "Public domain",
         "generator": "My glTF exporter v2.0",
-        "copyright": "Public domain"
+        "version": "2.0"
     }
 }
 ----
@@ -2224,11 +2224,7 @@ The example below instantiates a Morph Target with non-default weights.
 [[instantiation-skinned]]
 ==== Skinned Mesh Primitives
 
-If a node defines the `skin` property, the mesh primitives that contain skinning-related attributes are instantiated as skinned mesh primitives. The `skin` property points to a skin object to use.
-
-Mesh primitives that do not have skinning-related attributes are instantiated as if the `skin` property is not defined.
-
-If none of the mesh primitives contain skinning-related attributes, the node's `skin` property **SHOULD NOT** be defined.
+If a node defines the `skin` property, the node **MUST** also define the `mesh` property and the mesh primitives are instantiated as skinned mesh primitives. The `skin` property points to a skin object to use. All mesh primitives of the referenced mesh **MUST** contain skinning-related attributes (i.e., `JOINTS_n` and `WEIGHTS_n`).
 
 If the node belongs to a scene, the common ancestor of the joints of the referenced skin **MUST** belong to the same scene.
 
@@ -3770,7 +3766,7 @@ The following table lists chunk types defined by this specification. GLB files *
 |====
 
 [[chunks-json]]
-==== Structured JSON Content
+===== Structured JSON Content
 
 This chunk contains a glTF JSON, as it would be provided by a standalone glTF JSON file.
 
@@ -3789,7 +3785,7 @@ If the JSON byte length is not a multiple of four as required for GLBv2, it can 
 ====
 
 [[chunks-bin]]
-==== Binary buffer
+===== Binary Buffer
 
 This chunk contains a binary payload that usually provides data for a glTF buffer. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
 
