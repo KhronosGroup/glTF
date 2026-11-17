@@ -682,9 +682,9 @@ The optional `copyright` and `generator` properties provide additional metadata.
 ----
 {
     "asset": {
-        "version": "2.0",
+        "copyright": "Public domain",
         "generator": "My glTF exporter v2.0",
-        "copyright": "Public domain"
+        "version": "2.0"
     }
 }
 ----
@@ -3766,7 +3766,7 @@ The following table lists chunk types defined by this specification. GLB files *
 |====
 
 [[chunks-json]]
-==== Structured JSON Content
+===== Structured JSON Content
 
 This chunk contains a glTF JSON, as it would be provided by a standalone glTF JSON file.
 
@@ -3785,7 +3785,7 @@ If the JSON byte length is not a multiple of four as required for GLBv2, it can 
 ====
 
 [[chunks-bin]]
-==== Binary buffer
+===== Binary Buffer
 
 This chunk contains a binary payload that usually provides data for a glTF buffer. See <<glb-stored-buffer,GLB-stored Buffer>> for details on referencing this chunk from JSON.
 
