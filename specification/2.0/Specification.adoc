@@ -33,7 +33,7 @@ ifndef::revdate[]
 [NOTE]
 .Note
 ====
-Khronos posts the AsciiDoc source of the glTF specification to enable community
+Khronos posts the AsciiDoc source of the glTF Specification to enable community
 feedback and remixing under CC-BY 4.0. Published versions of the Specification
 are located in the https://www.khronos.org/registry/glTF[glTF Registry].
 ====
@@ -76,7 +76,7 @@ glTF is an API-neutral runtime asset delivery format. glTF bridges the gap betwe
 
 The glTF Specification is intended for use by both implementers of the asset exporters or converters (e.g., digital content creation tools) and application developers seeking to import or load glTF assets, forming a basis for interoperability between these parties.
 
-Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
+The Specification text can address either party; typically, the intended audience can be inferred from context, though some sections are defined to address only one of these parties.
 
 Any requirements, prohibitions, recommendations, or options defined by <<introduction-normative-terminology, normative terminology>> are imposed only on the audience of that text.
 
@@ -85,14 +85,14 @@ Any requirements, prohibitions, recommendations, or options defined by <<introdu
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**,  **MAY**, and **OPTIONAL** in this document are to be interpreted as described in <<bcp14,BCP 14>>.
 
-These key words are highlighted in the specification for clarity.
+These key words are highlighted in the Specification for clarity.
 
 References to external documents are considered normative if the Specification uses any of the normative terms defined in this section to refer to them or their requirements, either as a whole or in part.
 
 [[introduction-informative-language]]
 === Informative Language
 
-Some language in the specification is purely informative, intended to give background or suggestions to implementers or developers.
+Some language in the Specification is purely informative, intended to give background or suggestions to implementers or developers.
 
 If an entire chapter or section contains only informative language, its title is suffixed with "`(Informative)`". If not designated as informative, all chapters, sections, and appendices in this document are normative.
 
@@ -195,7 +195,7 @@ A process of selecting an image pixel based on normalized texture coordinates.
 [[introduction-normative-references]]
 === Normative References
 
-The following documents are referenced by normative sections of the specification:
+The following documents are referenced by normative sections of the Specification:
 
 ==== External Specifications
 
@@ -361,7 +361,7 @@ glTF has been designed to meet the following goals:
 
 * **Complete 3D scene representation.** Not restricted to single objects, glTF can represent entire scenes, including nodes, transformations, transform hierarchy, meshes, materials, cameras, and animations.
 
-* **Extensibility.** glTF is fully extensible, enabling the addition of both general-purpose and vendor-specific extensions, including geometry and texture compression. Widely adopted extensions may be considered for integration into future versions of the glTF specification.
+* **Extensibility.** glTF is fully extensible, enabling the addition of both general-purpose and vendor-specific extensions, including geometry and texture compression. Widely adopted extensions may be considered for integration into future versions of the glTF Specification.
 
 The following are outside the scope of glTF 2.0:
 
@@ -387,15 +387,15 @@ A valid glTF asset **MUST** specify its version.
 [[versioning]]
 == Versioning
 
-This specification defines glTF version 2.0, that is, major version 2 and minor version 0.
+This Specification defines glTF version 2.0, that is, major version 2 and minor version 0.
 
 Any updates made to the glTF Specification in subsequent minor versions (while keeping the major version) **MUST** be backward and forward compatible.
 
-Backward compatibility means that a glTF asset authored for this version of the specification remains valid for all later minor versions of the specification. Client implementations that support any later minor version will also support all earlier minor versions.
+Backward compatibility means that a glTF asset authored for this version of the Specification remains valid for all later minor versions of the Specification. Client implementations that support any later minor version will also support all earlier minor versions.
 
-Forward compatibility means that a glTF asset authored for any later minor version will still be valid for this version of the specification. Client implementations that support this version of the specification will be able to load such assets while gracefully ignoring any new features they do not understand.
+Forward compatibility means that a glTF asset authored for any later minor version will still be valid for this version of the Specification. Client implementations that support this version of the Specification will be able to load such assets while gracefully ignoring any new features they do not understand.
 
-Assets **MAY** opt out of default forward compatibility by specifying the minimum specification version, see the <<asset,Asset>> section below for more details.
+Assets **MAY** opt out of default forward compatibility by specifying the minimum Specification version, see the <<asset,Asset>> section below for more details.
 
 A minor version update **MAY** introduce new features but **MUST NOT** change any previously existing behavior. Existing functionality **MAY** be deprecated in a minor version update, but it **MUST NOT** be removed.
 
@@ -413,7 +413,7 @@ Major version updates **MAY** be incompatible with previous versions.
 [[json-encoding]]
 == JSON Encoding
 
-Although glTF Specification does not define any subset of the <<json,JSON>> format, implementations **SHOULD** be aware of its peculiar properties that could affect asset interoperability.
+Although the glTF Specification does not define any subset of the <<json,JSON>> format, implementations **SHOULD** be aware of its peculiar properties that could affect asset interoperability.
 
 1. glTF JSON data **SHOULD** be written with UTF-8 encoding without BOM. This requirement is not applied when a glTF implementation does not control string encoding. glTF implementations **SHOULD** adhere to <<json,RFC 8259>>, Section 8.1. with regards to treating BOM presence.
 
@@ -498,7 +498,7 @@ This is typically achieved with dedicated serialization algorithms used by commo
 [[uris-overview]]
 === Overview
 
-glTF assets use <<iri,IRI-references>> to refer to external resources or embed resources directly. Only two kinds of IRI-references are in scope of this specification: `data:` URLs and relative paths without parameters.
+glTF assets use <<iri,IRI-references>> to refer to external resources or embed resources directly. Only two kinds of IRI-references are in scope of this Specification: `data:` URLs and relative paths without parameters.
 
 [NOTE]
 .Implementation Note
@@ -506,7 +506,7 @@ glTF assets use <<iri,IRI-references>> to refer to external resources or embed r
 This allows the application to decide the best approach for delivery: if different assets share many of the same resources, separate files may be preferred to reduce the total amount of data requested. With separate files, applications may progressively load data and do not need to load data for parts of an asset that are not visible. If an application cares more about single-file deployment, embedding data may be preferred even though it increases the overall size due to base64 encoding and does not support progressive or on-demand loading. Alternatively, an asset could use the GLB container to store JSON and binary data in one file without base64 encoding. See <<glb-file-format-specification,GLB File Format Specification>> for details.
 ====
 
-Client implementations **MAY** optionally support additional reference types, such as `https://` or `file://` schemes, authorities, absolute paths, and query or fragment parameters. Assets containing such references would be less portable and are out of scope of this specification.
+Client implementations **MAY** optionally support additional reference types, such as `https://` or `file://` schemes, authorities, absolute paths, and query or fragment parameters. Assets containing such references would be less portable and are out of scope of this Specification.
 
 The following steps are **RECOMMENDED** for all IRI-reference strings when loading glTF assets. These adjustments would make no difference for valid IRI-references but they could fix strings that slightly deviate from the standard syntax.
 
@@ -597,7 +597,7 @@ Relative paths **SHOULD** undergo syntax-based normalization as defined by <<iri
 [NOTE]
 .Implementation Note
 ====
-While the specification does not explicitly disallow non-normalized paths, their use may be unsupported or lead to unwanted side-effects -- such as security warnings or cache misses -- on some platforms.
+While the Specification does not explicitly disallow non-normalized paths, their use may be unsupported or lead to unwanted side-effects -- such as security warnings or cache misses -- on some platforms.
 ====
 
 The following steps are **RECOMMENDED** after the aforementioned invalid character removals before normalization and percent-decoding when loading glTF assets. These adjustments would make no difference for references that strictly adhere to the `ipath-noscheme` or `path-noscheme` syntaxes but could fix strings that slightly deviate from them.
@@ -755,7 +755,7 @@ Red, Green, and Blue primary colors use <<bt709,Recommendation ITU-R BT.709>> ch
 [NOTE]
 .Implementation Note
 ====
-Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green, and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future specification versions or extensions may allow other color primaries (such as P3).
+Chromaticity coordinates define the interpretation of each primary color channel of the color model. In the context of a typical display, color primaries describe the color of the red, green, and blue phosphors or filters. Unless a wide color gamut output is explicitly used, client implementations usually do not need to convert colors. Future Specification versions or extensions may allow other color primaries (such as P3).
 ====
 
 [[scenes]]
@@ -1043,7 +1043,7 @@ In the following snippet, the first buffer object refers to GLB-stored data, whi
 ----
 ====
 
-Any glTF buffer with undefined `uri` property that is not the first element of the `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and specification versions.
+Any glTF buffer with undefined `uri` property that is not the first element of the `buffers` array does not refer to the GLB-stored BIN chunk, and the behavior of such buffers is left undefined to accommodate future extensions and Specification versions.
 
 The byte length of the GLB's `BIN` chunk **MUST** be greater than or equal to the byte length of the corresponding glTF buffer.
 
@@ -1636,9 +1636,9 @@ Attribute semantic names not belonging to any of these categories are out of sco
 
 The following table provides attribute semantic names with their compatible accessor types and effective accessor component types for the attribute semantics defined in this Specification. Any combination of types and/or effective component types not present in this table **MUST NOT** be used for attribute semantics defined in this Specification.
 
-Future specification versions or extensions **MAY** define new attribute semantics as well as additional compatible types and/or effective component types for existing attribute semantics.
+Future Specification versions or extensions **MAY** define new attribute semantics as well as additional compatible types and/or effective component types for existing attribute semantics.
 
-Accessors of the _uint32_ effective component type **SHOULD NOT** be used for any vertex attribute semantic, including application-specific semantics, unless explicitly enabled by future specification versions or extensions.
+Accessors of the _uint32_ effective component type **SHOULD NOT** be used for any vertex attribute semantic, including application-specific semantics, unless explicitly enabled by future Specification versions or extensions.
 
 [options="header",cols="20%,20%,30%,30%"]
 |====
@@ -1660,7 +1660,7 @@ Accessors of the _uint32_ effective component type **SHOULD NOT** be used for an
                                     _unorm16_                   | See <<skinned-mesh-primitive-attributes,Skinned Mesh Primitive Attributes>>
 |====
 
-All attribute semantics defined in this table except `JOINTS_n` are inherently continuous, i.e., they provide real numbers, and the `JOINTS_n` attribute semantic is inherently discrete, i.e., it provides non-negative integers, regardless of the storage method used.
+All attribute semantics defined in this Specification except `JOINTS_n` are inherently continuous, i.e., they provide real numbers, and the `JOINTS_n` attribute semantic is inherently discrete, i.e., it provides non-negative integers, regardless of the storage method used.
 
 The `TEXCOORD_n`, `COLOR_n`, `JOINTS_n`, and `WEIGHTS_n` attribute semantic property names have the form `[semantic]_[index]`, e.g., `TEXCOORD_0`, `TEXCOORD_1`, `COLOR_0`. The following rules apply to the `[index]` syntax:
 
@@ -1735,7 +1735,7 @@ The maximum values unconditionally trigger primitive restart in some graphics AP
 
 The rest of this section uses the "`number of the primitive's vertices`" term as defined above, i.e., the value of the `count` property of the vertex indices accessor if it is defined, or the value of the `count` property of the attribute accessors otherwise. In all cases, the number of the primitive's vertices **MUST** be positive.
 
-The primitive's vertices are connected based on the value of the enumerated `mode` property that defines the topology type of the mesh primitive. The following list provides all topology types defined by this specification. Most topology types have specific requirements for the number of the primitive's vertices.
+The primitive's vertices are connected based on the value of the enumerated `mode` property that defines the topology type of the mesh primitive. The following list provides all topology types defined by this Specification. Most topology types have specific requirements for the number of the primitive's vertices.
 
 * **Point Lists**
 +
@@ -1903,7 +1903,7 @@ The following example shows a mesh with three primitives and two morph targets. 
 [NOTE]
 .Implementation Note
 ====
-A significant number of authoring and client implementations associate names with morph targets. While the glTF 2.0 specification currently does not provide a way to specify names, many tools add a `targetNames` array of strings to the `extras` object of the mesh containing the morph targets. The number of elements of the `targetNames` array is equal to the number of the morph targets of the mesh.
+A significant number of authoring and client implementations associate names with morph targets. While the glTF 2.0 Specification currently does not provide a way to specify names, many tools add a `targetNames` array of strings to the `extras` object of the mesh containing the morph targets. The number of elements of the `targetNames` array is equal to the number of the morph targets of the mesh.
 ====
 
 [[morph-targets-storage]]
@@ -1911,9 +1911,9 @@ A significant number of authoring and client implementations associate names wit
 
 The following table provides attribute semantic names that support morph targets with their compatible accessor types and effective accessor component types for the attribute semantics defined in this Specification. Any combination of types and/or effective component types not present in this table **MUST NOT** be used for attribute semantics defined in this Specification.
 
-Future specification versions or extensions **MAY** define new attribute semantics that support morph targets.
+Future Specification versions or extensions **MAY** define new attribute semantics that support morph targets.
 
-Accessors of the _uint32_ effective component type **SHOULD NOT** be used for morph target differences, unless explicitly enabled by future specification versions or extensions.
+Accessors of the _uint32_ effective component type **SHOULD NOT** be used for morph target differences, unless explicitly enabled by future Specification versions or extensions.
 
 [options="header",cols="20%,20%,30%,30%"]
 |====
@@ -2359,7 +2359,7 @@ image::figures/texcoords.svg[pdfwidth=3in,align=left]
 
 Image objects are stored in the asset's `images` array.
 
-An image object represents a reference to an image resource. The glTF 2.0 specification supports only image resources stored in PNG and JPEG image formats (further defined below). Support for other image formats **MAY** be added by extensions or future Specification versions.
+An image object represents a reference to an image resource. The glTF 2.0 Specification supports only image resources stored in PNG and JPEG image formats (further defined below). Support for other image formats **MAY** be added by extensions or future Specification versions.
 
 The image reference is given either by the `bufferView` or `uri` properties; exactly one of these two properties **MUST** be defined.
 
@@ -2422,7 +2422,7 @@ Regardless of the storage format, images always have four color channels: red, g
 
 <<png,PNG>> images **MUST** use the <<image-png,`image/png`>> Media Type. PNG images **SHOULD** use the `.png` file extension when stored as separate files.
 
-If a PNG image does not have an explicit alpha channel but includes a `tRNS` chunk, the image's alpha channel is controlled by the content of that chunk as defined in the PNG specification.
+If a PNG image does not have an explicit alpha channel but includes a `tRNS` chunk, the image's alpha channel is controlled by the content of that chunk as defined in the PNG Specification.
 
 If a PNG image has neither an explicit alpha channel, nor a `tRNS` chunk, the image is fully opaque, i.e., its alpha channel has a uniform value of stem:[1.0].
 
@@ -2444,7 +2444,7 @@ These features are not universally implemented, can conflict with glTF definitio
 [NOTE]
 .Implementation Note
 ====
-Chunk presence does not always mean that the corresponding feature is used, see the PNG specification for more information on how PNG chunks are interpreted.
+Chunk presence does not always mean that the corresponding feature is used, see the PNG Specification for more information on how PNG chunks are interpreted.
 ====
 
 [[images-jpeg]]
@@ -2929,7 +2929,7 @@ This material does not emit light and will be black unless some lighting is pres
 [[point-and-line-materials]]
 === Point and Line Materials
 
-This specification does not define size or style of non-triangular primitives (such as _points_ or _lines_), and applications **MAY** use various techniques to render these primitives as appropriate. However, the following conventions are **RECOMMENDED** for consistency:
+This Specification does not define size or style of non-triangular primitives (such as _points_ or _lines_), and applications **MAY** use various techniques to render these primitives as appropriate. However, the following conventions are **RECOMMENDED** for consistency:
 
 * Points and Lines **SHOULD** have widths of 1px in viewport space.
 * Points or Lines with `NORMAL` and `TANGENT` attributes **SHOULD** be rendered with standard lighting including normal textures.
@@ -3069,7 +3069,7 @@ Animation of skinned mesh primitives is achieved by targeting transforms of the 
 [NOTE]
 .Implementation Note
 ====
-glTF 2.0 defines only storage of animation keyframes, so this specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc. When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
+glTF 2.0 defines only storage of animation keyframes, so this Specification doesn't define any runtime behavior, such as: order of playing, auto-start, loops, mapping of timelines, etc. When loading a glTF 2.0 asset, client implementations may select an animation entry and pause it on the first frame, play it automatically, or ignore all animations until further user requests. When a playing animation is stopped, client implementations may reset the scene to the initial state or freeze it at the current frame.
 ====
 
 [NOTE]
@@ -3104,7 +3104,7 @@ Timestamp data provided by the input accessor **MUST NOT** contain infinite or N
 [[animations-samplers-interpolation]]
 ==== Interpolation
 
-The sampler's `interpolation` property defines the interpolation mode used to compute values of the animated properties for timestamps between the keyframes provided by the accessors. This specification defines three interpolation methods: `"STEP"`, `"LINEAR"`, and `"CUBICSPLINE"`.
+The sampler's `interpolation` property defines the interpolation mode used to compute values of the animated properties for timestamps between the keyframes provided by the accessors. This Specification defines three interpolation methods: `"STEP"`, `"LINEAR"`, and `"CUBICSPLINE"`.
 
 [NOTE]
 .Implementation Note
@@ -3134,7 +3134,7 @@ The exact layout of per-keyframe data depends on the interpolation mode and on w
 [NOTE]
 .Implementation Note
 ====
-This specification defines only one array property that can be animated--morph weights of an instantiated mesh that has morph targets.
+This Specification defines only one array property that can be animated--morph weights of an instantiated mesh that has morph targets.
 ====
 
 The `"STEP"` and `"LINEAR"` interpolation methods require only the animated property values. The accessor element index stem:[i] corresponding to the keyframe with index stem:[k] is given by the following expression.
@@ -3275,7 +3275,7 @@ The sampler's output accessor **MUST** be compatible with the animated property 
                                            _unorm16_                         | Morph target weights
 |====
 
-The output accessor **MUST** provide the exact number of elements needed for all keyframes defined by the animation sampler and target. If the animated property is `"weights"`, its array length is equal to the number of the mesh's morph targets; other animatable properties defined in this specification are not arrays.
+The output accessor **MUST** provide the exact number of elements needed for all keyframes defined by the animation sampler and target. If the animated property is `"weights"`, its array length is equal to the number of the mesh's morph targets; other animatable properties defined in this Specification are not arrays.
 
 If the animated property is `"rotation"`, quaternions provided by the output accessor **MUST** be unit within the margin of floating point precision.
 
@@ -3385,7 +3385,7 @@ This step ensures that the interpolation follows the short path along the great 
 [NOTE]
 .Rationale
 ====
-Although the specification requires all rotation quaternions to be unit, their computed dot products could be slightly outside of the correct range due to floating-point precision limits.
+Although the Specification requires all rotation quaternions to be unit, their computed dot products could be slightly outside of the correct range due to floating-point precision limits.
 ====
 4. If the value of stem:[d] is close to positive one within an implementation-defined threshold stem:[\epsilon], i.e., if stem:[1 - d <= \epsilon], the spherical linear interpolation is replaced with the regular linear interpolation defined in the previous section. The interpolated quaternion is then renormalized. If the components of stem:[v_{k+1}] were negated during the step 2, the regular linear interpolation uses the negated components.
 +
@@ -3711,7 +3711,7 @@ uint32 version
 * `magic` **MUST** be equal to equal `0x46546C67`. It is ASCII string `glTF` that can be used to identify data as Binary glTF.
 * `version` indicates the version of the Binary glTF container format.
 
-This specification defines GLB version 2 ("`GLBv2`"); any other version value is out of scope.
+This Specification defines GLB version 2 ("`GLBv2`"); any other version value is out of scope.
 
 The version specified in the GLB header only refers to the GLB container version. The version of the contained glTF asset is determined by the glTF JSON.
 
@@ -3756,7 +3756,7 @@ The `chunkLength` value **MUST** be a multiple of four.
 [[chunks-types]]
 ==== Chunk Types
 
-The following table lists chunk types defined by this specification. GLB files **MAY** contain chunks of other types but their semantics are out of scope of this specification.
+The following table lists chunk types defined by this Specification. GLB files **MAY** contain chunks of other types but their semantics are out of scope of this Specification.
 
 [options="header"]
 |====
