@@ -611,9 +611,9 @@ The following steps are **RECOMMENDED** after the aforementioned invalid charact
 [[concepts-general]]
 == General
 
-The figure below shows relations between top-level arrays in a glTF asset. See the <<properties-reference, Properties Reference>>.
+The figure below shows links between objects defined in a glTF asset. See the <<properties-reference, Properties Reference>>.
 
-.glTF Object Hierarchy
+.glTF Objects
 image::figures/objects.svg[pdfwidth=6in,align=left]
 
 [[asset]]
