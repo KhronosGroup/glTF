@@ -103,6 +103,7 @@ Vendor extensions are not covered by the Khronos IP framework.
 * [MPEG_animation_timing](2.0/Vendor/MPEG_animation_timing/README.md)
 * [MPEG_audio_spatial](2.0/Vendor/MPEG_audio_spatial/README.md)
 * [MPEG_buffer_circular](2.0/Vendor/MPEG_buffer_circular/README.md)
+* [MPEG_gaussian_splatting_transport](2.0/Vendor/MPEG_gaussian_splatting_transport/README.md)
 * [MPEG_media](2.0/Vendor/MPEG_media/README.md)
 * [MPEG_mesh_linking](2.0/Vendor/MPEG_mesh_linking/README.md)
 * [MPEG_scene_dynamic](2.0/Vendor/MPEG_scene_dynamic/README.md)
