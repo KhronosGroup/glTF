@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_materials_bump glTF Material Extension",
+    "type": "object",
+    "description": "glTF extension that defines a bump which perturbs the surface normal.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "bumpFactor": {
+            "type": "number",
+            "description": "The bump height in metres per unit of the sampled red channel.",
+            "gltf_detailedDescription": "The bump height in metres per unit of the sampled red channel, measured in the space named by `heightSpace`. A negative value inverts the relief."
+        },
+        "bumpTexture": {
+            "allOf": [ { "$ref": "textureInfo.schema.json" } ],
+            "description": "A texture that defines the surface height in the red channel.",
+            "gltf_detailedDescription": "A texture that defines the surface height in the red channel. This will be multiplied by the bump factor."
+        },
+        "heightSpace": {
+            "type": "string",
+            "enum": [ "world", "object" ],
+            "default": "object",
+            "description": "The space in which the bump height is measured.",
+            "gltf_detailedDescription": "The space in which the bump height is measured. `world` measures `bumpFactor` in world space. `object` measures it in the node's local space, so it scales with the node transform."
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [ "bumpFactor", "bumpTexture" ]
+}
