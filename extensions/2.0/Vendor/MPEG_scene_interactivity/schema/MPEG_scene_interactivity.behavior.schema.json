@@ -1,0 +1,28 @@
+{
+    "$schema" : "http://json-schema.org/draft-04/schema",
+    "title" : "MPEG_scene_interactivity.behavior object",
+    "type" : "object",
+    "description" : "glTF extension to specify behavior formats",
+    "properties" : {
+        "triggers" : {
+            "type": "array",
+            "items":{"type":"integer"},
+            "minItems": 1,
+            "description": "Indices of the triggers in the triggers array considered for this behavior"
+        },
+        "actions" : {
+          "type": "array",
+          "items":{"type":"integer"},
+          "minItems": 1,
+          "description": "Indices of the actions in the actions array considered for this behavior"
+      },
+      "triggersCombinationControl":{"type":"string","description":"Set of logical operations to apply to the triggers"},
+      "triggersActivationControl":{"type":"string","description":"Value is oneOf TRIGGER_ACTIVATE_FIRST_ENTER, TRIGGER_ACTIVATE_EACH_ENTER, TRIGGER_ACTIVATE_ON, TRIGGER_ACTIVATE_FIRST_EXIT, TRIGGER_ACTIVATE_EACH_EXIT, TRIGGER_ACTIVATE_OFF and can be extended"},
+      "actionsControl":{"enum":["SEQUENTIAL","PARALLEL "],"description":"Defines the way to execute the defined actions."},
+      "interruptAction":{"type":"integer","description":"Index of the action in the actions array to be executed if the behavior is still on-going and is no more defined in a newly received scene update"},
+      "priority":{"type":"number","description":"Weight associated to the behavior. Used to select a behavior when several behaviors are active at same time for one node"},
+      "extensions": {},
+      "extras": {}
+    },
+    "required":["triggers","actions","triggersCombinationControl","triggersActivationControl","actionsControl","priority"]
+}
