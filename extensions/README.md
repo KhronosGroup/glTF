@@ -52,6 +52,7 @@ This section tracks the status of extensions and projects that are in developmen
 | KHR_materials_diffuse_transmission | Release Candidate | [Specification](2.0/Khronos/KHR_materials_diffuse_transmission/README.md) |
 | KHR_materials_subsurface | Initial Draft | [PR #1928](https://github.com/KhronosGroup/glTF/pull/1928) |
 | KHR_physics_rigid_bodies | Review Draft | [PR #2424](https://github.com/KhronosGroup/glTF/pull/2424) |
+| KHR_pmc_mesh_compression | Initial Draft | [Specification](2.0/Khronos/KHR_pmc_mesh_compression/README.md) |
 | KHR_texture_procedurals | Initial Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
 | EXT_texture_procedurals_mx_1_39 | Review Draft | [PR #2381](https://github.com/KhronosGroup/glTF/pull/2381) |
 | KHR_texture_video | Initial Draft | [PR #2285](https://github.com/KhronosGroup/glTF/pull/2285) |
