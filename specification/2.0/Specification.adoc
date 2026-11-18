@@ -3062,7 +3062,7 @@ The value of the `zfar` property **MUST** be greater than zero and greater than 
 [[animations-overview]]
 === Overview
 
-glTF 2.0 supports animating node transforms and morph target weights.
+glTF 2.0 supports animating node properties, such as transforms and morph target weights.
 
 Animation of skinned mesh primitives is achieved by targeting transforms of the nodes used as joints by the corresponding skin objects or ancestors of those nodes.
 
@@ -3298,7 +3298,7 @@ Within one animation, all targets **MUST** be unique. Two targets are equal if t
 This prevents potential ambiguities when two or more animation channels update the same property simultaneously.
 ====
 
-When the animation is active, it updates the values of the asset properties referenced from the animation's channels. Asset properties not referenced by the channels of the active animation retain their values.
+When the animation is active, it updates the values of the asset properties referenced from all non-ignored channels of the animation. Asset properties not referenced by the channels of the active animation retain their values.
 
 For each animation channel, the effective property value for the current timeline position is determined as follows.
 
@@ -3320,7 +3320,9 @@ If the last keyframe for a channel is at 15 seconds but the last keyframe across
 [NOTE]
 .Implementation Note
 ====
-Animations with non-linear time inputs are not directly representable with glTF animations. glTF is a runtime format and non-linear time inputs are expensive to compute at runtime. Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation.
+Animations with non-linear time inputs are not directly representable with glTF animations. glTF is a runtime format, and non-linear time inputs are expensive to compute at runtime.
+
+Exporter implementations should sample a non-linear time animation into linear inputs and outputs for an accurate representation. In certain cases, it might be possible to convert an animation that uses non-linear time inputs into a glTF animation that uses linear time inputs with cubic spline outputs.
 ====
 
 [[animations-interpolations]]
