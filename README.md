@@ -53,6 +53,7 @@ Please provide spec feedback by submitting [issues](https://github.com/KhronosGr
 * [Drag-and-drop validator](http://github.khronos.org/glTF-Validator/) for verifying correctness of existing glTF files.
 * [glTF Tutorial Series](https://github.com/KhronosGroup/glTF-Tutorials/blob/master/gltfTutorial/README.md)
 * [Khronos glTF Sample Viewer](http://github.khronos.org/glTF-Sample-Viewer/) with WebGL PBR shaders. ([source code](https://github.com/KhronosGroup/glTF-Sample-Viewer))
+* [NVIDIA vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer): Vulkan ray tracing glTF renderer with an RTX path tracer, PBR materials, AI denoising and scene editing.
 
 ### For artists
 
