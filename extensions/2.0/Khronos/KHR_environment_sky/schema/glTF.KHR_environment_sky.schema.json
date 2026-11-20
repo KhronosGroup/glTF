@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.0/extensions/Khronos/KHR_environment_sky/glTF.KHR_environment_sky.schema.json",
+    "title": "KHR_environment_sky glTF Document Extension",
+    "type": "object",
+    "description": "Top level global environment skies and skyboxes.",
+    "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
+    "properties": {
+        "skies": {
+            "type": "array",
+            "description": "An array of skies defining sky and skybox parameters.",
+            "items": {
+                "type": "object",
+                "$ref": "glTF.KHR_environment_sky.sky.schema.json"
+            }
+        },
+        "sky": {
+            "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFid.schema.json",
+            "description": "The index of the sky in the top level skies array. If not specified, use the sky at index 0 as the sky.",
+            "default": 0
+        }
+    },
+    "required": ["skies"]
+}
