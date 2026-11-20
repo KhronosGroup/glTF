@@ -2,20 +2,21 @@
 
 ## Contributors
 
-* Martin-Karl Lefrançois, NVIDIA, [@mklefrancois](https://github.com/mklefrancois)
-* Nia Bickford, NVIDIA, [@NBickford-NV](https://github.com/NBickford-NV)
-* Bastian Sdorra, Dassault Systèmes, [@bsdorra](https://github.com/bsdorra)
-* Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
+- Martin-Karl Lefrançois, NVIDIA, [@mklefrancois](https://github.com/mklefrancois)
+- Nia Bickford, NVIDIA, [@NBickford-NV](https://github.com/NBickford-NV)
+- Bastian Sdorra, Dassault Systèmes, [@bsdorra](https://github.com/bsdorra)
+- Alexey Knyazev, Individual Contributor, [@lexaknyazev](https://github.com/lexaknyazev)
 
 ## Status
 
-Release Candidate (RC)
+Complete, Ratified by the Khronos Group
 
 ## Dependencies
 
 Written against the glTF 2.0 spec.
 
 ## Exclusions
+
 - This extension must not be used on a material that also uses `KHR_materials_pbrSpecularGlossiness`.
 - This extension must not be used on a material that also uses `KHR_materials_unlit`.
 
@@ -138,16 +139,16 @@ This extension should not be listed in the `extensionsRequired` list, as retrore
 
 ## Schema
 
-* [material.KHR_materials_retroreflection.schema.json](schema/material.KHR_materials_retroreflection.schema.json)
+- [material.KHR_materials_retroreflection.schema.json](schema/material.KHR_materials_retroreflection.schema.json)
 
 ## Known Implementations
 
-* [NVIDIA DesignWorks Samples' vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer)
+- [NVIDIA DesignWorks Samples' vk_gltf_renderer](https://github.com/nvpro-samples/vk_gltf_renderer)
 
 ## Resources
 
 *This section is non-normative.*
 
-* [Jamie Portsmouth, Matthias Raab, Laurent Belcour, and Francis Liu, The Minimal Retroreflective Microfacet Model, *Journal of Computer Graphics Techniques (JCGT)*, vol. 15, no. 1, 60-75, 2026](http://jcgt.org/published/0015/01/04/)
-* [Retroreflection in MaterialX](https://github.com/AcademySoftwareFoundation/MaterialX/blob/v1.39.5/documents/Specification/MaterialX.PBRSpec.md?plain=1#L203)
-* [Retroreflection in OpenPBR](https://github.com/AcademySoftwareFoundation/OpenPBR/pull/255)
+- [Jamie Portsmouth, Matthias Raab, Laurent Belcour, and Francis Liu, The Minimal Retroreflective Microfacet Model, *Journal of Computer Graphics Techniques (JCGT)*, vol. 15, no. 1, 60-75, 2026](http://jcgt.org/published/0015/01/04/)
+- [Retroreflection in MaterialX](https://github.com/AcademySoftwareFoundation/MaterialX/blob/v1.39.5/documents/Specification/MaterialX.PBRSpec.md?plain=1#L203)
+- [Retroreflection in OpenPBR](https://github.com/AcademySoftwareFoundation/OpenPBR/pull/255)
