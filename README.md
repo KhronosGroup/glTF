@@ -19,6 +19,7 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 
 * [glTF Specification, 2.0](https://www.khronos.org/registry/glTF/) (or [all specification versions](https://github.com/KhronosGroup/glTF/blob/main/specification/README.md))
 * [glTF Extension Registry](https://github.com/KhronosGroup/glTF/blob/main/extensions/README.md)
+* [glTF Community Extensions](https://github.com/KhronosGroup/glTF-Community) - glTF 2.0 vendor extensions and vendor prefix registration
 
 Please provide spec feedback by submitting [issues](https://github.com/KhronosGroup/glTF/issues). For technical or art workflow questions, or to showcase your work, [join the glTF forum](https://community.khronos.org/c/gltf-general). For quick questions, use the `#gltf` channel in the Khronos Group [Slack](https://www.khr.io/slack).
 

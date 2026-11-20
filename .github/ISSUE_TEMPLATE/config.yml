@@ -1,0 +1,10 @@
+# Copyright 2026 The Khronos Group Inc.
+# SPDX-License-Identifier: Apache-2.0
+blank_issues_enabled: true
+contact_links:
+  - name: Request a vendor prefix or submit a glTF 2.0 vendor extension
+    url: https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md
+    about: Vendor prefixes and glTF 2.0 vendor extensions are handled in the glTF-Community repository, not here.
+  - name: Move an existing vendor extension to glTF-Community
+    url: https://github.com/KhronosGroup/glTF-Community/blob/main/vendors/README.md#migrating-an-existing-extension-from-khronosgroupgltf
+    about: Instructions for vendors moving extensions out of extensions/2.0/Vendor.
