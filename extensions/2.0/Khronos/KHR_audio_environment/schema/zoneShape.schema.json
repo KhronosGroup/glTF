@@ -1,0 +1,42 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "zoneShape.schema.json",
+    "title": "KHR_audio_environment Zone Shape",
+    "type": "object",
+    "allOf": [
+        { "$ref": "glTFProperty.schema.json" },
+        {
+            "if": { "properties": { "type": { "const": "box" } } },
+            "then": { "required": ["size"] }
+        },
+        {
+            "if": { "properties": { "type": { "const": "sphere" } } },
+            "then": { "required": ["radius"] }
+        }
+    ],
+    "properties": {
+        "type": {
+            "description": "Zone volume shape in node-local space, centered at the node origin.",
+            "anyOf": [
+                { "const": "box" },
+                { "const": "sphere" },
+                { "type": "string" }
+            ]
+        },
+        "size": {
+            "type": "array",
+            "description": "Box only: full extents along local X/Y/Z.",
+            "items": { "type": "number", "exclusiveMinimum": 0.0 },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "radius": {
+            "type": "number",
+            "description": "Sphere only: radius.",
+            "exclusiveMinimum": 0.0
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["type"]
+}

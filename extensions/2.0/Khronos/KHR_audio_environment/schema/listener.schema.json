@@ -1,0 +1,39 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "listener.schema.json",
+    "title": "KHR_audio_environment Listener",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFChildOfRootProperty.schema.json" }],
+    "properties": {
+        "name": {},
+        "gain": {
+            "type": "number",
+            "description": "Master gain applied to the final mix heard by this listener. Linear.",
+            "minimum": 0.0,
+            "default": 1.0
+        },
+        "spatializationModel": {
+            "description": "Spatialization algorithm for positional emitters.",
+            "anyOf": [
+                { "const": "equalpower" },
+                { "const": "HRTF" },
+                { "const": "custom" },
+                { "type": "string" }
+            ],
+            "default": "equalpower"
+        },
+        "hrtf": { "$ref": "hrtf.schema.json" },
+        "interauralDistance": {
+            "type": "number",
+            "description": "Distance between ears in meters.",
+            "minimum": 0.0,
+            "default": 0.17
+        },
+        "graph": {
+            "allOf": [{ "$ref": "glTFid.schema.json" }],
+            "description": "Index into KHR_audio_graph.graphs[]; listener-bus processing hook applied to the final mix. The referenced graph MUST NOT declare inputs or outputs bindings."
+        },
+        "extensions": {},
+        "extras": {}
+    }
+}
