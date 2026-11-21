@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.shape.cylinder.schema.json",
+    "title": "OMI_physics_shape Cylinder Shape",
+    "type": "object",
+    "description": "Parameters describing a cylinder physics shape.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+    "properties": {
+        "height": {
+            "type": "number",
+            "description": "The height of the cylinder shape in meters, the distance between the centers of the two capping discs.",
+            "exclusiveMinimum": 0.0,
+            "default": 2.0
+        },
+        "radiusBottom": {
+            "type": "number",
+            "description": "The radius of the bottom of the cylinder (the disc located along -Y) in meters.",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "radiusTop": {
+            "type": "number",
+            "description": "The radius of the top of the cylinder (the disc located along +Y) in meters.",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "extensions": { },
+        "extras": { }
+    }
+}

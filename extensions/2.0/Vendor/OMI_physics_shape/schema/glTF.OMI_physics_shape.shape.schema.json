@@ -1,0 +1,119 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "glTF.OMI_physics_shape.shape.schema.json",
+    "title": "OMI_physics_shape Shape Resource",
+    "type": "object",
+    "description": "Defines a physics shape resource that can be referenced by nodes.",
+    "allOf": [ { "$ref": "glTFChildOfRootProperty.schema.json" } ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "Specifies the shape type of this physics shape.",
+            "enum": [
+                "box",
+                "sphere",
+                "capsule",
+                "cylinder",
+                "convex",
+                "trimesh"
+            ]
+        },
+        "extensions": { },
+        "extras": { }
+    },
+    "required": [
+        "type"
+    ],
+    "oneOf": [
+        {
+            "required": [
+                "type",
+                "box"
+            ],
+            "properties": {
+                "type": {
+                    "const": "box"
+                },
+                "box": {
+                    "type": "object",
+                    "$ref": "glTF.OMI_physics_shape.shape.box.schema.json"
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "sphere"
+            ],
+            "properties": {
+                "type": {
+                    "const": "sphere"
+                },
+                "sphere": {
+                    "type": "object",
+                    "$ref": "glTF.OMI_physics_shape.shape.sphere.schema.json"
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "capsule"
+            ],
+            "properties": {
+                "type": {
+                    "const": "capsule"
+                },
+                "capsule": {
+                    "type": "object",
+                    "$ref": "glTF.OMI_physics_shape.shape.capsule.schema.json"
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "cylinder"
+            ],
+            "properties": {
+                "type": {
+                    "const": "cylinder"
+                },
+                "cylinder": {
+                    "type": "object",
+                    "$ref": "glTF.OMI_physics_shape.shape.cylinder.schema.json"
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "convex"
+            ],
+            "properties": {
+                "type": {
+                    "const": "convex"
+                },
+                "convex": {
+                    "type": "object",
+                    "$ref": "glTF.OMI_physics_shape.shape.convex.schema.json"
+                }
+            }
+        },
+        {
+            "required": [
+                "type",
+                "trimesh"
+            ],
+            "properties": {
+                "type": {
+                    "const": "trimesh"
+                },
+                "trimesh": {
+                    "type": "object",
+                    "$ref": "glTF.OMI_physics_shape.shape.trimesh.schema.json"
+                }
+            }
+        }
+    ]
+}
