@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "KHR_audio_graph Channel Mixer Node",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "outputChannels": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The desired output channel count."
+        },
+        "channelInterpretation": {
+            "type": "string",
+            "enum": ["speakers", "discrete"],
+            "description": "The channel interpretation applied by the mixer.",
+            "default": "speakers"
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["outputChannels"]
+}
