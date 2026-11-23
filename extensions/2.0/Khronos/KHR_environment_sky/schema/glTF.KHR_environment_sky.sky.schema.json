@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.0/extensions/Khronos/KHR_environment_sky/glTF.KHR_environment_sky.sky.schema.json",
+    "title": "KHR_environment_sky Sky Parameters",
+    "type": "object",
+    "description": "Environment sky and skybox parameters.",
+    "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
+    "properties": {
+        "ambientLightColor": {
+            "type": "array",
+            "description": "The color of the ambient light, if sky contribution is less than 1.0.",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "default": [0.0, 0.0, 0.0]
+        },
+        "ambientSkyContribution": {
+            "type": "number",
+            "description": "The ratio of contribution the sky makes to the ambient light.",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "default": 1.0
+        },
+        "rotation": {
+            "type": "array",
+            "description": "The unit quaternion representing the sky's rotation.",
+            "items": {
+                "type": "number",
+                "minimum": -1.0,
+                "maximum": 1.0
+            },
+            "minItems": 4,
+            "maxItems": 4,
+            "default": [0.0, 0.0, 0.0, 1.0]
+        },
+        "type": {
+            "type": "string",
+            "description": "The type of sky as a string (`gradient`, `panorama`, `physical`, `plain`, or custom).",
+            "anyOf": [
+                {
+                    "const": "gradient",
+                    "description": "Gradient skies use color gradients to define the sky colors."
+                },
+                {
+                    "const": "panorama",
+                    "description": "Panorama skies use a texture or set of textures to represent the sky."
+                },
+                {
+                    "const": "physical",
+                    "description": "Physical skies use a physically-based model to simulate the scattering of light in the atmosphere."
+                },
+                {
+                    "const": "plain",
+                    "description": "Plain color skies use a single color to represent the sky."
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "gradient": {
+            "$ref": "glTF.KHR_environment_sky.sky.gradient.schema.json",
+            "description": "If present, the properties of a gradient sky."
+        },
+        "panorama": {
+            "$ref": "glTF.KHR_environment_sky.sky.panorama.schema.json",
+            "description": "If present, the properties of a panorama sky."
+        },
+        "physical": {
+            "$ref": "glTF.KHR_environment_sky.sky.physical.schema.json",
+            "description": "If present, the properties of a physical sky."
+        },
+        "plain": {
+            "$ref": "glTF.KHR_environment_sky.sky.plain.schema.json",
+            "description": "If present, the properties of a plain color sky."
+        }
+    },
+    "required": ["type"]
+}

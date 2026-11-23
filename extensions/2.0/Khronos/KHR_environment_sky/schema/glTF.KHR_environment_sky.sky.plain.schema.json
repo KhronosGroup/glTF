@@ -1,0 +1,20 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.0/extensions/Khronos/KHR_environment_sky/glTF.KHR_environment_sky.sky.plain.schema.json",
+    "title": "KHR_environment_sky Plain Sky Parameters",
+    "type": "object",
+    "description": "Plain color skies use a single color to represent the sky.",
+    "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
+    "properties": {
+        "color": {
+            "type": "array",
+            "description": "The color of the sky.",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3
+        }
+    }
+}

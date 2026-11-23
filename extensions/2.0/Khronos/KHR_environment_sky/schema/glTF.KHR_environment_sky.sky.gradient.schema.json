@@ -1,0 +1,65 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://schema.khronos.org/gltf/2.0/extensions/Khronos/KHR_environment_sky/glTF.KHR_environment_sky.sky.gradient.schema.json",
+    "title": "KHR_environment_sky Gradient Sky Parameters",
+    "type": "object",
+    "description": "Gradient skies use color gradients to define the sky colors.",
+    "$ref": "https://schema.khronos.org/gltf/2.0/specification/glTFProperty.schema.json",
+    "properties": {
+        "bottomColor": {
+            "type": "array",
+            "description": "The color of the sky at the bottom, also known as the nadir.",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "bottomCurve": {
+            "type": "number",
+            "description": "The transition curve between the bottom and the horizon colors. 1 is linear, below 1 makes the bottom color more dominant, above 1 makes the horizon color more dominant.",
+            "exclusiveMinimum": 0.0,
+            "default": 0.02
+        },
+        "horizonColor": {
+            "type": "array",
+            "description": "The color of the sky at the horizon.",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "topColor": {
+            "type": "array",
+            "description": "The color of the sky at the top, also known as the zenith.",
+            "items": {
+                "type": "number",
+                "minimum": 0.0
+            },
+            "minItems": 3,
+            "maxItems": 3
+        },
+        "topCurve": {
+            "type": "number",
+            "description": "The transition curve between the top and the horizon colors. 1 is linear, below 1 makes the top color more dominant, above 1 makes the horizon color more dominant.",
+            "exclusiveMinimum": 0.0,
+            "default": 0.15
+        },
+        "sunAngleMax": {
+            "type": "number",
+            "description": "The maximum radius angle of the sun(s) in radians.",
+            "minimum": 0.0,
+            "default": 0.5
+        },
+        "sunCurve": {
+            "type": "number",
+            "description": "The transition curve between the sun(s) and the sky colors. 1 is linear, below 1 makes the sky color more dominant, above 1 makes the sun color more dominant.",
+            "exclusiveMinimum": 0.0,
+            "default": 0.15
+        }
+    },
+    "required": ["bottomColor", "horizonColor", "topColor"]
+}
