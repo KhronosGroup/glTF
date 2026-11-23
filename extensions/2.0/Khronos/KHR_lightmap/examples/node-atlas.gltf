@@ -1,0 +1,246 @@
+{
+    "asset": {
+        "version": "2.0",
+        "minVersion": "2.0",
+        "generator": "KHR_lightmap proposal example",
+        "copyright": "2026 Ben Houston, CC0-1.0"
+    },
+    "extensionsUsed": [
+        "KHR_lightmap",
+        "KHR_texture_transform"
+    ],
+    "extensionsRequired": [
+        "KHR_lightmap",
+        "KHR_texture_transform"
+    ],
+    "scene": 0,
+    "scenes": [
+        {
+            "nodes": [
+                0,
+                1
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 160,
+            "uri": "data:application/octet-stream;base64,zczMvgAAAAAAAAAAzczMPgAAAAAAAAAAAAAAAM3MTD8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/zczMPc3MzD1mZmY/zczMPQAAAD9mZmY/mpkZvwAAAAAAAAAAmpkZPwAAAAAAAAAAAAAAAAAAAAAAAAA/AAAAAAAAAD8AAIA/AAAAPwAAgD8AAAAAAAAAAA=="
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 36,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 36,
+            "byteLength": 36,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 72,
+            "byteLength": 24,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 96,
+            "byteLength": 24
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 120,
+            "byteLength": 16
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 136,
+            "byteLength": 16
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 152,
+            "byteLength": 8
+        }
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC3",
+            "min": [
+                -0.4,
+                0,
+                0
+            ],
+            "max": [
+                0.4,
+                0.8,
+                0
+            ]
+        },
+        {
+            "bufferView": 1,
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 2,
+            "componentType": 5126,
+            "count": 3,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 3,
+            "componentType": 5126,
+            "count": 2,
+            "type": "VEC3"
+        },
+        {
+            "bufferView": 4,
+            "componentType": 5126,
+            "count": 2,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 5,
+            "componentType": 5126,
+            "count": 2,
+            "type": "VEC2"
+        },
+        {
+            "bufferView": 6,
+            "componentType": 5126,
+            "count": 2,
+            "type": "SCALAR"
+        }
+    ],
+    "images": [
+        {
+            "uri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAIAAAB7QOjdAAAAD0lEQVR4nGP43+Dg0PAfAAxAA38Z/C4gAAAAAElFTkSuQmCC"
+        }
+    ],
+    "samplers": [
+        {
+            "magFilter": 9728,
+            "minFilter": 9728,
+            "wrapS": 33071,
+            "wrapT": 33071
+        }
+    ],
+    "textures": [
+        {
+            "source": 0,
+            "sampler": 0
+        }
+    ],
+    "materials": [
+        {
+            "pbrMetallicRoughness": {
+                "metallicFactor": 0,
+                "roughnessFactor": 1
+            },
+            "extensions": {
+                "KHR_lightmap": {
+                    "lightmapTexture": {
+                        "index": 0,
+                        "texCoord": 1
+                    },
+                    "intensity": 10
+                }
+            }
+        }
+    ],
+    "meshes": [
+        {
+            "primitives": [
+                {
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TEXCOORD_0": 2,
+                        "TEXCOORD_1": 2
+                    },
+                    "material": 0
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "mesh": 0,
+            "translation": [
+                -0.6,
+                0,
+                0
+            ],
+            "extensions": {
+                "KHR_lightmap": {
+                    "lightmaps": [
+                        {
+                            "primitive": 0,
+                            "lightmapTexture": {
+                                "index": 0,
+                                "texCoord": 1,
+                                "extensions": {
+                                    "KHR_texture_transform": {
+                                        "offset": [
+                                            0,
+                                            0
+                                        ],
+                                        "scale": [
+                                            0.5,
+                                            1
+                                        ]
+                                    }
+                                }
+                            },
+                            "intensity": 10
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "mesh": 0,
+            "translation": [
+                0.6,
+                0,
+                0
+            ],
+            "extensions": {
+                "KHR_lightmap": {
+                    "lightmaps": [
+                        {
+                            "primitive": 0,
+                            "lightmapTexture": {
+                                "index": 0,
+                                "texCoord": 1,
+                                "extensions": {
+                                    "KHR_texture_transform": {
+                                        "offset": [
+                                            0.5,
+                                            0
+                                        ],
+                                        "scale": [
+                                            0.5,
+                                            1
+                                        ]
+                                    }
+                                }
+                            },
+                            "intensity": 10
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
