@@ -20,6 +20,7 @@ The following extensions have been ratified by the Khronos Group:
 * [KHR_materials_emissive_strength](2.0/Khronos/KHR_materials_emissive_strength/README.md)
 * [KHR_materials_ior](2.0/Khronos/KHR_materials_ior/README.md)
 * [KHR_materials_iridescence](2.0/Khronos/KHR_materials_iridescence/README.md)
+* [KHR_materials_retroreflection](2.0/Khronos/KHR_materials_retroreflection/README.md)
 * [KHR_materials_sheen](2.0/Khronos/KHR_materials_sheen/README.md)
 * [KHR_materials_specular](2.0/Khronos/KHR_materials_specular/README.md)
 * [KHR_materials_transmission](2.0/Khronos/KHR_materials_transmission/README.md)
