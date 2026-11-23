@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "node.KHR_node_lookat_target.schema.json",
+  "title": "KHR_node_lookat_target glTF Node Extension",
+  "description": "Identifies a node as a passive positional marker whose evaluated per-instance global translation is the target point. The marker does not select a downstream system or cause orientation behavior.",
+  "type": "object",
+  "allOf": [ { "$ref": "glTFProperty.schema.json" } ],
+  "properties": {
+    "hint": {
+      "type": "string",
+      "description": "Nonempty advisory label suggesting an intended use. Values are exact and case-sensitive. No standard values are defined, and vendor-qualified values such as 'ACME_eye_target' are recommended. A value's meaning comes only from a separate specification or application profile; this extension defines no behavior for it.",
+      "minLength": 1
+    },
+    "extensions": { },
+    "extras": { }
+  }
+}
