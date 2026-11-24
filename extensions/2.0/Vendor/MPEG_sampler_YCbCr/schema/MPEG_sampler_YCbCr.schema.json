@@ -1,0 +1,47 @@
+{
+    "$schema" : "http://json-schema.org/draft-07/schema",
+    "title" : "",
+    "type" : "object",
+    "description": "defines an extension to support YCbCr formatted textures.",
+    "allOf": [ { "$ref": "glTFProperty.schema.json"} ],
+    "properties" : {
+        "ycbcrModel": {
+            "type": "integer",
+            "description": "color matrix conversion model",
+            "gltf_detailedDescription": "color matrix conversion model",
+            "minimum": 0            
+        },
+        "ycbcrRange": {
+            "type": "integer",
+            "description": "range used for the color encoding",
+            "gltf_detailedDescription": "range used for the color encoding",
+            "minimum": 0            
+        },
+        "chromaFilter": {
+            "type": "integer",
+            "description": "filter for chroma reconstruction",
+            "gltf_detailedDescription": "filter for chroma reconstruction",
+            "minimum": 0            
+        },        
+        "components": {
+            "type": "array",
+            "description": "swizzle applied to the RGBA components prior to range expansion and color model conversion",
+            "items": {
+                "type": "integer"
+            },
+            "minItems": 1            
+        },
+        "xChromaOffset": {
+            "type": "integer",
+            "description": "sample location associated with downsampled chroma in the x dimension",
+            "gltf_detailedDescription": "sample location associated with downsampled chroma in the x dimension",
+            "minimum": 0            
+        },
+        "yChromaOffset": {
+            "type": "integer",
+            "description": "sample location associated with downsampled chroma in the y dimension",
+            "gltf_detailedDescription": "sample location associated with downsampled chroma in the y dimension",
+            "minimum": 0            
+        }
+    }
+}
