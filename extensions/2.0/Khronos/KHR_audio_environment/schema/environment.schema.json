@@ -1,0 +1,14 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "environment.schema.json",
+    "title": "KHR_audio_environment Environment",
+    "type": "object",
+    "allOf": [{ "$ref": "glTFChildOfRootProperty.schema.json" }],
+    "properties": {
+        "name": {},
+        "reverb": { "$ref": "reverb.schema.json" },
+        "doppler": { "$ref": "doppler.schema.json" },
+        "extensions": {},
+        "extras": {}
+    }
+}
