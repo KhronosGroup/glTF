@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "MPEG_gaussian_splatting_transport.shEncoding.mpegPerChannel",
+    "type": "object",
+    "description": "SH coefficients stored as per-channel SCALAR accessors. The DC term is excluded. Each channel contains 15 values per splat for degrees 1 to 3.",
+    "allOf": [{ "$ref": "glTFProperty.schema.json" }],
+    "properties": {
+        "r": {
+            "type": "integer",
+            "description": "Accessor index for red channel coefficients (15 scalar values per splat).",
+            "minimum": 0
+        },
+        "g": {
+            "type": "integer",
+            "description": "Accessor index for green channel coefficients (15 scalar values per splat).",
+            "minimum": 0
+        },
+        "b": {
+            "type": "integer",
+            "description": "Accessor index for blue channel coefficients (15 scalar values per splat).",
+            "minimum": 0
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": ["r", "g", "b"]
+}
