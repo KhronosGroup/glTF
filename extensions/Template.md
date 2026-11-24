@@ -3,6 +3,8 @@ Copyright 2015-2021 The Khronos Group Inc.
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
+> **Note:** This template is for Khronos (`KHR_`) and multi-vendor (`EXT_`) extensions developed in this repository. glTF 2.0 vendor extensions are submitted to [glTF-Community](https://github.com/KhronosGroup/glTF-Community) using its [extension template](https://github.com/KhronosGroup/glTF-Community/blob/main/extensions/TEMPLATE.md). Delete this note when using the template.
+
 # TODO_EXTENSION_NAME
 
 ## Contributors

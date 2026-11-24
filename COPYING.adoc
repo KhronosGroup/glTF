@@ -20,7 +20,10 @@ The glTF project uses several licenses.
   figures and images for vendor-defined extensions are licensed by the
   responsible vendors. At present we are unsure on the exact license details
   for vendor extensions and have tagged them all with a "`TBD`" status until
-  this is resolved (SPDX license identifier "`LicenseRef-TBD.txt`").
+  this is resolved (SPDX license identifier "`LicenseRef-TBD.txt`"). This is
+  being resolved by moving glTF 2.0 vendor extensions to the
+  link:https://github.com/KhronosGroup/glTF-Community[glTF-Community]
+  repository, where each vendor states the license for its extensions.
 * Makefiles, scripts, and other tooling used or generated as part of the
   build process are licensed under the Apache License, Version 2.0 (SPDX
   license identifier "`Apache-2.0`").
