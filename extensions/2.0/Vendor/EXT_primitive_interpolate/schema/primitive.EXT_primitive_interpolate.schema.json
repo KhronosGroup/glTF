@@ -1,0 +1,26 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "EXT_primitive_interpolate extension",
+    "type": "object",
+    "description": "glTF extension defines an interpolated surface for a mesh primitive.",
+    "allOf": [
+        {
+            "$ref": "glTFProperty.schema.json"
+        }
+    ],
+    "properties": {
+        "halfedgeTangents": {
+            "allOf": [
+                {
+                    "$ref": "glTFid.schema.json"
+                }
+            ],
+            "description": "The index of the accessor that contains the weighted halfedge tangent vectors."
+        },
+        "extensions": {},
+        "extras": {}
+    },
+    "required": [
+        "halfedgeTangents"
+    ]
+}
