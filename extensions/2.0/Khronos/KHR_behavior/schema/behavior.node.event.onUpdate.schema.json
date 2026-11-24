@@ -1,0 +1,17 @@
+{
+    "title": "onUpdate Event Node",
+    "properties": {
+        "type": {
+            "const": "event/onUpdate"
+        },
+        "flow": {
+            "type": "object",
+            "properties": {
+                "next": { "$ref": "behavior.types.flow.schema.json"}
+            },
+            "required": ["next"]
+        }
+    },
+    "sockets": [],
+    "required": ["type", "flow"]
+}
