@@ -3984,7 +3984,7 @@ External glTF assets **MAY** be added to a top-level `externalAssets` array. The
 When an embedded external asset is embedded via a <<data-url,Data URI>> or a `bufferView`, any relative URIs it contains are resolved against the same base URI as the parent asset, unless the URI is remapped by an alias. _E.g._, If asset `A` embeds external asset `B`, and `B` references textures at the relative path `./textures/**`, those textures resolve relative to the location of `A`, making them accessible to both `A` and `B`.
 ====
 
-Nodes *MAY* contain an `externalAsset` property that refers to an external glTF asset in the `externalAssets` array by index.
+Nodes *MAY* contain an `externalAsset` property that refers to an external glTF asset in the `externalAssets` array by index. Nodes *MAY* contain both an `externalAsset` and other `children`.
 
 [NOTE]
 .Implementation Note
@@ -4021,12 +4021,6 @@ Once loaded, the root nodes defined by the external asset's default scene and th
 ----
 
 This instantiates the external asset as this node in the scene hierarchy. The root nodes in the default `scene` of the nested glTF become children of this external asset node. Assets that have no `scenes` array or lack a default `scene` are valid but have nothing to attach to the node hierarchy and should be treated as such. Extensions or future spec versions **MAY** alter this behavior.
-
-[NOTE]
-.Implementation Note
-====
-Nodes may contain both an `externalAsset` and other `children`. For consistency between implementations, it is recommended that the root node(s) of the external asset are attached after the other children of the node.
-====
 
 See <<appendix-c-external-asset-diagrams, Appendix C>> for detailed diagrams outlining a sample structure and the expected scene graph.
 
