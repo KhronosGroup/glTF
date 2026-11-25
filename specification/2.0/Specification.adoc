@@ -611,9 +611,9 @@ The following steps are **RECOMMENDED** after the aforementioned invalid charact
 [[concepts-general]]
 == General
 
-The figure below shows relations between top-level arrays in a glTF asset. See the <<properties-reference, Properties Reference>>.
+The figure below shows links between objects defined in a glTF asset. See the <<properties-reference, Properties Reference>>.
 
-.glTF Object Hierarchy
+.glTF Objects
 image::figures/objects.svg[pdfwidth=6in,align=left]
 
 [[asset]]
@@ -2318,6 +2318,12 @@ glTF 2.0 supports only static 2D textures.
 
 Textures are stored in the asset's `textures` array. A texture is defined by the `source` and `sampler` properties that define the texture's image and sampler, respectively.
 
+[NOTE]
+.Implementation Note
+====
+The `source` property name does not match the corresponding array name, i.e., `images`, for historical reasons.
+====
+
 The image provides texture's data, and the sampler defines wrapping and filtering modes for the texture.
 
 [NOTE]
@@ -2335,6 +2341,8 @@ The image provides texture's data, and the sampler defines wrapping and filterin
 }
 ----
 ====
+
+The image referenced by the texture's `source` property **MUST** use image formats defined in the <<images,Images>> section below.
 
 When the `source` property of a texture is undefined, the texture's image **SHOULD** be provided by an extension or application-specific means, otherwise the texture's image is undefined and using the texture could result in undefined rendering results.
 
@@ -2365,7 +2373,15 @@ image::figures/texcoords.svg[pdfwidth=3in,align=left]
 
 Image objects are stored in the asset's `images` array.
 
-An image object represents a reference to an image resource. The glTF 2.0 Specification supports only image resources stored in PNG and JPEG image formats (further defined below). Support for other image formats **MAY** be added by extensions or future Specification versions.
+An image object represents a reference to an image resource. The glTF 2.0 Specification supports only image resources stored in PNG and JPEG image formats (further defined below).
+
+Image resources of unknown formats cannot be used by glTF textures unless explicitly enabled by extensions or future Specification versions. However, such image resources **MAY** be present in glTF assets.
+
+[NOTE]
+.Implementation Note
+====
+Although glTF images are primarily used by glTF textures, they could also be used by custom extension objects or even stay unused.
+====
 
 The image reference is given either by the `bufferView` or `uri` properties; exactly one of these two properties **MUST** be defined.
 
@@ -2404,7 +2420,7 @@ This example shows an image pointing to an external PNG image file and another i
 
 Client implementations **MAY** need to manually determine image media types. In such a case, the following table **SHOULD** be used to derive the media type based in the values of the first few bytes of the resource.
 
-[options="header"]
+[options="header",cols="15%,20%,65%"]
 |====
 | Media Type   | Pattern Length | Pattern Bytes
 | `image/png`  | 8              | `0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A`
@@ -2433,6 +2449,14 @@ If a PNG image does not have an explicit alpha channel but includes a `tRNS` chu
 If a PNG image has neither an explicit alpha channel, nor a `tRNS` chunk, the image is fully opaque, i.e., its alpha channel has a uniform value of stem:[1.0].
 
 If a PNG image uses a "`Greyscale`" or "`Greyscale with alpha`" color types, the values of the red, green, and blue channels of the image are equal to the "`Grey`" samples.
+
+All bit depths defined in the PNG Specification are supported. However, PNG images that use 16 bits per color channel **SHOULD NOT** be used by glTF textures backing material parameters that use the sRGB opto-electronic transfer function.
+
+[NOTE]
+.Rationale
+====
+Graphics APIs generally do not support accelerated sRGB decoding from 16-bit pixel formats.
+====
 
 The following PNG features **SHOULD NOT** be present and **SHOULD** be ignored by client implementations if encountered:
 
@@ -2623,6 +2647,8 @@ Values of properties that represent texturable material parameters are JSON obje
 
 The value of the `texCoord` property is used to compose a vertex attribute semantic name by converting the index to a decimal and appending it to the `TEXCOORD_` string. For example, texture coordinate set indices 0 and 1 would yield `"TEXCOORD_0"` and `"TEXCOORD_1"` vertex attribute semantic names, respectively. A mesh primitive that references a material that uses textures **MUST** define the corresponding texture coordinate vertex attribute semantics.
 
+Definitions of texturable material parameters include their opto-electronic transfer functions (encodings). The same texture object **SHOULD NOT** be used by material parameters that use different transfer functions.
+
 [[metallic-roughness-material]]
 === Metallic-Roughness Material
 
@@ -2684,7 +2710,7 @@ Let:
 
 - latexmath:[\langle 0.2, 1.0, 0.7, 1.0 \rangle] be the base color factor value;
 - latexmath:[\langle 0.7, 0.8, 0.9, 0.5 \rangle] be the vertex color value interpolated at the current pixel;
-- latexmath:[\langle 64, 124, 231, 255 \rangle] be the 8-bit value stored in the base color texture for the current pixel; this value is dequantized and decoded to latexmath:[\langle 0.051, 0.202, 0.799, 1.0 \rangle].
+- latexmath:[\langle 64, 124, 231, 255 \rangle] be the 8-bit value stored in the base color texture for the current pixel; this value is dequantized and decoded from sRGB to latexmath:[\langle 0.051, 0.202, 0.799, 1.0 \rangle].
 
 Then the effective per-pixel base color RGBA value is
 [latexmath]
