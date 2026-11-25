@@ -4025,7 +4025,7 @@ This instantiates the external asset as this node in the scene hierarchy. The ro
 [NOTE]
 .Implementation Note
 ====
-Nodes may contain both an `externalAsset` and other `children`. For consistency between implementations, it is recommended that the root node(s) of the external asset are attached after the other children of the node.
+Nodes may contain both an `externalAsset` and other `children`.
 ====
 
 See <<appendix-c-external-asset-diagrams, Appendix C>> for detailed diagrams outlining a sample structure and the expected scene graph.
